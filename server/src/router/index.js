@@ -7,7 +7,7 @@ const eventRouter = require('./EventRouter')
 const eventtypeRouter = require('./EventTypeRouter')
 const sportsRouter = require('./SportsRouter')
 const subscriptionsRouter = require("./SubscriptionsRouter")
-const pdfRouter=require("./pdfRoutes")
+
 
 router.use('/user', userRouter)
 router.use('/userinfo', userinfoRouter)
@@ -16,6 +16,5 @@ router.use('/event', eventRouter)
 router.use('/eventtype', eventtypeRouter)
 router.use('/sports', sportsRouter)
 router.use('/subscriptions', subscriptionsRouter)
-router.use('/subiect', pdfRouter)
 
 module.exports = router

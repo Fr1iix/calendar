@@ -1,15 +1,13 @@
 const fs = require('fs');
 const path = require('path');
 const pdfParse = require('pdf-parse');
-const { Events } = require('../models/models');
 
 /**
- * Парсит строку из блока и возвращает объект для сохранения
+ * Парсит строку из блока и возвращает объект с данными события
  * @param {string} rawString - Исходная строка из PDF
- * @returns {Object} Данные для записи в базу
+ * @returns {Object} Данные события
  */
 const parseEventString = (rawString) => {
-    // Разбиваем строку на строки, убирая лишние пробелы
     const lines = rawString.split('\n').map(line => line.trim()).filter(line => line);
 
     if (lines.length < 7) { // Проверяем, что в блоке достаточно строк
@@ -49,41 +47,30 @@ const parseEventString = (rawString) => {
 };
 
 /**
- * Контроллер для парсинга PDF и записи данных в базу
+ * Middleware для парсинга PDF и передачи списка событий в следующий обработчик
  * @param {Object} req - Объект запроса
  * @param {Object} res - Объект ответа
+ * @param {Function} next - Следующий обработчик
  */
-const parsePdfAndSaveEvents = async (req, res) => {
+const parsePdfMiddleware = async (req, res, next) => {
     try {
-        const filePath = path.join(__dirname, '../uploads', 'pdfFile.pdf');
+        const filePath = path.join(__dirname, '../uploads', 'pdfFile.pdf'); // Путь к PDF
         const pdfBuffer = fs.readFileSync(filePath);
 
+        // Парсинг PDF
         const parsedData = await pdfParse(pdfBuffer);
-
         const text = parsedData.text;
-        const blocks = text.split(/(?=\d{16})/).filter(block => block.trim());
-        console.log('Extracted Blocks:', blocks); // Лог для проверки
 
+        // Разделение текста на блоки по ID (16 цифр в начале строки)
+        const blocks = text.split(/(?=\d{16})/).filter(block => block.trim());
 
         const events = [];
         for (const block of blocks) {
             try {
-                console.log('начало блока')
-                console.log('Processing block:', block);
-                console.log('конец блока')
-                console.log('-----------------------------------------------')
-
-                if (!block || typeof block !== 'string') {
-                    console.warn('Skipping invalid block:', block);
-                    continue;
-                }
-
                 const eventData = parseEventString(block);
-                console.log('Parsed event:', eventData);
-
                 events.push(eventData);
             } catch (err) {
-                console.warn(`Failed to parse block: {block}`, err.message);
+                console.warn(`Failed to parse block: ${block}`, err.message);
             }
         }
 
@@ -91,15 +78,15 @@ const parsePdfAndSaveEvents = async (req, res) => {
             return res.status(400).json({ error: 'No valid events found in the PDF' });
         }
 
-        const savedEvents = await Events.bulkCreate(events);
-        res.json({
-            message: 'Events parsed and saved successfully',
-            savedEvents,
-        });
+        console.log(events)
+
+        // Передаем список событий в req.body.events
+        req.body.events = events;
+        next(); // Передаем управление следующему обработчику
     } catch (error) {
-        console.error('Error processing PDF:', error);
+        console.error('Error processing PDF:', error.message);
         res.status(500).json({ error: 'Failed to process PDF', details: error.message });
     }
 };
 
-module.exports = { parsePdfAndSaveEvents };
+module.exports = parsePdfMiddleware;
