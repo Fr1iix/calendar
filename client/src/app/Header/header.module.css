@@ -16,13 +16,14 @@
 
 .calendarText {
     color: white;
+    font-size: 18px;
     margin-left: 10px;
     line-height: 1.2;
 }
 
 .buttonContainer {
     display: flex;
-    margin-right: 250px;
+    font-size: 18px;
     justify-content: center;
     flex-grow: 1;
 }
@@ -37,6 +38,7 @@
 
 .authButtons {
     display: flex;
+    font-size: 18px;
     align-items: center;
 }
 
