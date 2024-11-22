@@ -3,35 +3,64 @@
     color: #314367;
     font-family: Arial, sans-serif;
     text-align: center;
+    background-image: url('/bg.png'); /* укажите путь к вашему изображению здесь */
+    background-size: cover; /* Изображение будет покрывать весь фон */
+    background-position: center; /* Центровка изображения */
+    background-repeat: no-repeat; /* Избегайте повторения изображения */
+    min-height: 100vh; /* Обеспечение охвата всей высоты страницы */
 }
 
 .heroSection {
     display: flex;
-    height: 50vh; /* Половина высоты экрана для отдела hero */
+    min-height: 50vh;
 }
 
 .imageContainer {
     flex: 1;
     position: relative;
+    width: 100%;
 }
 
 .textContainer {
-    flex: 1;
+    flex: 0.8;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 2rem;
     text-align: center;
 }
 
 .textContainer h1 {
-    font-size: 2.5rem;
+    font-size: 60px;
     margin-bottom: 1rem;
+    font-weight: bold;
 }
 
 .textContainer p {
-    font-size: 1.2rem;
+    color: black;
+    font-size: 25px;
+}
+
+.eventButton {
+    margin-top: 20px;
+    padding: 12px 22px;
+    color: #FFFFFF;
+    background-color: #314367;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background-color 0.3s ease;
+}
+
+.eventButton:hover {
+    background-color: #25334D;
+}
+
+.separator {
+    height: 160px;
+    background-color: #314367;
+    width: 100%;
 }
 
 .features {

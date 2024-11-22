@@ -6,31 +6,34 @@ export default function Home() {
         <main className={styles.main}>
             <div className={styles.heroSection}>
                 <div className={styles.imageContainer}>
-                    <Image src="/main.png" alt="Sports" layout='fill' objectFit='cover' />
+                    <Image src="/main.png" alt="Sports" width={800} height={600} layout="responsive" />
                 </div>
                 <div className={styles.textContainer}>
-                    <h1>Добро пожаловать на наш <br/>Спортивный Календарь</h1>
+                    <h1>Добро пожаловать на наш<br/>Спортивный Календарь</h1>
                     <p>
                         Платформа для отслеживания спортивных мероприятий<br/> по всем видам спорта.
                     </p>
+                    <button className={styles.eventButton}>Список соревнований</button>
                 </div>
             </div>
 
+            <div className={styles.separator}></div>
+
             <section className={styles.features}>
                 <div className={styles.card}>
-                    <Image src="/filter-icon.png" alt="Filter Icon" width={80} height={80} />
+                    <Image src="/filter-icon.png" alt="Filter Icon" width={80} height={80} layout="fixed" />
                     <h2>Фильтрация мероприятий</h2>
                     <p>Используйте продвинутую фильтрацию по видам спорта, местоположению и другим параметрам.</p>
                 </div>
 
                 <div className={styles.card}>
-                    <Image src="/notification-icon.png" alt="Notification Icon" width={80} height={80} />
+                    <Image src="/notification-icon.png" alt="Notification Icon" width={80} height={80} layout="fixed" />
                     <h2>Персональные Уведомления</h2>
                     <p>Получайте уведомления о новых и измененных мероприятиях, чтобы ничего не пропустить.</p>
                 </div>
 
                 <div className={styles.card}>
-                    <Image src="/calendar-icon.png" alt="Calendar Icon" width={80} height={80} />
+                    <Image src="/calendar-icon.png" alt="Calendar Icon" width={80} height={80} layout="fixed" />
                     <h2>Удобный Календарь</h2>
                     <p>Все мероприятия в одном месте с возможностью просмотра на ближайшие недели или месяцы.</p>
                 </div>
