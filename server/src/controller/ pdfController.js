@@ -4,7 +4,7 @@ const pdfParse = require('pdf-parse');
 
 // Функция для парсинга PDF из файла на сервере
 const parsePdfFromFile = (req, res) => {
-    const filePath = path.join(__dirname, '../uploads', 'example.pdf'); // Путь к вашему файлу
+    const filePath = path.join(__dirname, '../uploads', 'pdfFile.pdf'); // Путь к вашему файлу
 
     fs.readFile(filePath, (err, data) => {
         if (err) {
