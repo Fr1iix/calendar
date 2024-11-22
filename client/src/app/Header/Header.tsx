@@ -1,7 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import Image from 'next/image';
-import AuthModal from '@/app/components/AuthModal';
+import AuthModal from '../components/AuthModal';
 import styles from './header.module.css';
 
 export default function Header() {

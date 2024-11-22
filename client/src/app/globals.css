@@ -4,7 +4,7 @@
 
 @font-face {
   font-family: 'Dela Gothic One';
-  src: url('./fonts/GeistMonoVF.woff') format('woff');
+  src: url('fonts/GeistMonoVF.woff') format('woff');
   font-weight: bold;
   font-style: normal;
 }
