@@ -58,7 +58,7 @@ export default function CompetitionCalendar() {
     competitionType: ''
   });
 
-  const handleFilterChange = (e) => {
+  const handleFilterChange = (e: { target: { name: any; value: any; }; }) => {
     const { name, value } = e.target;
     setFilters(prev => ({
       ...prev,
@@ -79,7 +79,7 @@ export default function CompetitionCalendar() {
         case 'dateTo':
           return !value || competition.date <= value;
         default:
-          return competition[key].toLowerCase().includes(value.toLowerCase());
+          return // competition[key].toLowerCase().includes(value.toLowerCase());
       }
     });
   });
