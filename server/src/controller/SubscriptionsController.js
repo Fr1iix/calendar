@@ -1,54 +1,32 @@
-const { Subscriptions } = require('../models/models');
+const ApiError = require('../error/ApiError');
+const {Subscriptions} = require('../models/models')
 
-module.exports = {
-    async getAll(req, res) {
-        try {
-            const subscriptions = await Subscriptions.findAll();
-            res.json(subscriptions);
-        } catch (error) {
-            res.status(500).json({ error: error.message });
+class SubscriptionsController{
+    async create(req,res,next){
+        try{
+            let{subscriptionType} = req.body
+            const subscriptions = await Subscriptions.create({subscriptionType});
+            return res.json(subscriptions)
+        }catch (e) {
+            next(ApiError.badRequest(e.message))
         }
-    },
+    }
 
-    async getById(req, res) {
-        try {
-            const { id } = req.params;
-            const subscription = await Subscriptions.findByPk(id);
-            if (!subscription) return res.status(404).json({ message: 'Subscription not found' });
-            res.json(subscription);
-        } catch (error) {
-            res.status(500).json({ error: error.message });
-        }
-    },
+    async deleteSubscriptions(req,res){
+        const id = req.params.id
+        await Subscriptions.destroy({where: {id}})
+    }
 
-    async create(req, res) {
-        try {
-            const newSubscription = await Subscriptions.create(req.body);
-            res.status(201).json(newSubscription);
-        } catch (error) {
-            res.status(400).json({ error: error.message });
-        }
-    },
+    async getAllSubscriptions(req, res){
+        const AllSubscriptions = await Subscriptions.findAll
+        return res.json(AllSubscriptions)
+    }
 
-    async update(req, res) {
-        try {
-            const { id } = req.params;
-            const [updated] = await Subscriptions.update(req.body, { where: { id } });
-            if (!updated) return res.status(404).json({ message: 'Subscription not found' });
-            res.json({ message: 'Subscription updated successfully' });
-        } catch (error) {
-            res.status(400).json({ error: error.message });
-        }
-    },
+    async getOneSubscriptions(req, res){
+        const id = req.params.id
+        const OneSubscriptions = await Subscriptions.findByPk(id)
+        return res.json(OneSubscriptions)
+    }
+}
 
-    async remove(req, res) {
-        try {
-            const { id } = req.params;
-            const deleted = await Subscriptions.destroy({ where: { id } });
-            if (!deleted) return res.status(404).json({ message: 'Subscriptions not found' });
-            res.json({ message: 'Subscriptions deleted successfully' });
-        } catch (error) {
-            res.status(500).json({ error: error.message });
-        }
-    },
-};
+module.exports = new SubscriptionsController

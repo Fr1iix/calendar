@@ -1,54 +1,32 @@
-const { Sports } = require('../models/models');
+const ApiError = require('../error/ApiError');
+const {Sports} = require('../models/models')
 
-module.exports = {
-    async getAll(req, res) {
-        try {
-            const sports = await Sports.findAll();
-            res.json(sports);
-        } catch (error) {
-            res.status(500).json({ error: error.message });
+class SportsController{
+    async create(req,res,next){
+        try{
+            let{name} = req.body
+            const sports = await Sports.create({name});
+            return res.json(sports)
+        }catch (e) {
+            next(ApiError.badRequest(e.message))
         }
-    },
+    }
 
-    async getById(req, res) {
-        try {
-            const { id } = req.params;
-            const sport = await Sports.findByPk(id);
-            if (!sport) return res.status(404).json({ message: 'Sport not found' });
-            res.json(sport);
-        } catch (error) {
-            res.status(500).json({ error: error.message });
-        }
-    },
+    async deleteSports(req,res){
+        const id = req.params.id
+        await Sports.destroy({where: {id}})
+    }
 
-    async create(req, res) {
-        try {
-            const newSport = await Sports.create(req.body);
-            res.status(201).json(newSport);
-        } catch (error) {
-            res.status(400).json({ error: error.message });
-        }
-    },
+    async getAllSports(req, res){
+        const AllSports = await Sports.findAll
+        return res.json(AllSports)
+    }
 
-    async update(req, res) {
-        try {
-            const { id } = req.params;
-            const [updated] = await Sports.update(req.body, { where: { id } });
-            if (!updated) return res.status(404).json({ message: 'Sport not found' });
-            res.json({ message: 'Sport updated successfully' });
-        } catch (error) {
-            res.status(400).json({ error: error.message });
-        }
-    },
+    async getOneSports(req, res){
+        const id = req.params.id
+        const OneSports = await Sports.findByPk(id)
+        return res.json(OneSports)
+    }
+}
 
-    async remove(req, res) {
-        try {
-            const { id } = req.params;
-            const deleted = await Sports.destroy({ where: { id } });
-            if (!deleted) return res.status(404).json({ message: 'Sport not found' });
-            res.json({ message: 'Sport deleted successfully' });
-        } catch (error) {
-            res.status(500).json({ error: error.message });
-        }
-    },
-};
+module.exports = new SportsController

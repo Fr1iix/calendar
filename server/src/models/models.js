@@ -37,7 +37,6 @@ const Events = sequelize.define('events', {
     latitude: { type: DataTypes.FLOAT }, // Геолокация
     longitude: { type: DataTypes.FLOAT },
     registrationLink: { type: DataTypes.STRING },
-    participationFee: { type: DataTypes.FLOAT }, // Стоимость участия
     status: { type: DataTypes.STRING, defaultValue: 'planned' }, // Статус: planned, ongoing, completed, canceled
 }, { timestamps: false });
 

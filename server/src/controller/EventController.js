@@ -1,54 +1,32 @@
-const { Events } = require('../models/models');
+const ApiError = require('../error/ApiError');
+const {Event} = require('../models/models')
 
-module.exports = {
-    async getAll(req, res) {
-        try {
-            const events = await Events.findAll();
-            res.json(events);
-        } catch (error) {
-            res.status(500).json({ error: error.message });
+class EventController{
+    async create(req,res,next){
+        try{
+            let{title, details, city, region, venue, participantsCount, gender, ageGroup, startDate, endDate, startTime, endTime, latitude, longitude, registrationLink, status} = req.body
+            const event = await Event.create({title, details, city, region, venue, participantsCount, gender, ageGroup, startDate, endDate, startTime, endTime, latitude, longitude, registrationLink, status});
+            return res.json(event)
+        }catch (e) {
+            next(ApiError.badRequest(e.message))
         }
-    },
+    }
 
-    async getById(req, res) {
-        try {
-            const { id } = req.params;
-            const event = await Events.findByPk(id);
-            if (!event) return res.status(404).json({ message: 'Event not found' });
-            res.json(event);
-        } catch (error) {
-            res.status(500).json({ error: error.message });
-        }
-    },
+    async deleteEvent(req,res){
+        const id = req.params.id
+        await Event.destroy({where: {id}})
+    }
 
-    async create(req, res) {
-        try {
-            const newEvent = await Events.create(req.body);
-            res.status(201).json(newEvent);
-        } catch (error) {
-            res.status(400).json({ error: error.message });
-        }
-    },
+    async getAllEvent(req, res){
+        const AllEvent = await Event.findAll
+        return res.json(AllEvent)
+    }
 
-    async update(req, res) {
-        try {
-            const { id } = req.params;
-            const [updated] = await Events.update(req.body, { where: { id } });
-            if (!updated) return res.status(404).json({ message: 'Event not found' });
-            res.json({ message: 'Event updated successfully' });
-        } catch (error) {
-            res.status(400).json({ error: error.message });
-        }
-    },
+    async getOneEvent(req, res){
+        const id = req.params.id
+        const OneEvent = await Event.findByPk(id)
+        return res.json(OneEvent)
+    }
+}
 
-    async remove(req, res) {
-        try {
-            const { id } = req.params;
-            const deleted = await Events.destroy({ where: { id } });
-            if (!deleted) return res.status(404).json({ message: 'Event not found' });
-            res.json({ message: 'Event deleted successfully' });
-        } catch (error) {
-            res.status(500).json({ error: error.message });
-        }
-    },
-};
+module.exports = new EventController()

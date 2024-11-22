@@ -18,14 +18,14 @@ class EventTypesController{
     }
 
     async getAllEventTypes(req, res){
-        const AllTrip = await EventTypes.findAll
-        return res.json(AllTrip)
+        const AllEventTypes = await EventTypes.findAll
+        return res.json(AllEventTypes)
     }
 
     async getOneEventTypes(req, res){
         const id = req.params.id
-        const OneTrip = await EventTypes.findByPk(id)
-        return res.json(OneTrip)
+        const OneEventTypes = await EventTypes.findByPk(id)
+        return res.json(OneEventTypes)
     }
 }
 
