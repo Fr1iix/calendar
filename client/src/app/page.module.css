@@ -65,39 +65,28 @@
     align-items: center;
 }
 
-.itemsWrap {
-    position: relative;
-    display: flex;
-    overflow: hidden;
-    gap: 20px;
+.tickers {
     width: 100%;
+    overflow: hidden;
 }
 
-.items {
+.ticker {
     display: flex;
-    gap: 20px;
-    min-width: 100%;
+    animation: marquee 20s linear infinite;
 }
 
-.item {
-    background: #ccc;
-    padding: 20px;
-    border-radius: 6px;
-    color: #fff;
-    font-size: 1.5rem;
-    font-weight: bold;
+.ticker__head {
     white-space: nowrap;
-}
-
-.marquee {
-    animation: marquee 10s linear infinite;
+    margin: 0 15px;
+    font-size: 24px;
+    color: #FFF;
 }
 
 @keyframes marquee {
-    from {
-        transform: translateX(0);
+    0% {
+        transform: translateX(100%);
     }
-    to {
+    100% {
         transform: translateX(-100%);
     }
 }

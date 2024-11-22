@@ -1,6 +1,8 @@
+import React from 'react';
 import Image from 'next/image';
 import styles from './page.module.css';
 import Link from 'next/link';
+import Marquee from 'react-fast-marquee'; // Импортируем Marquee
 
 export default function Home() {
     return (
@@ -21,21 +23,35 @@ export default function Home() {
             </div>
 
             <div className={styles.separator}>
-                <div className={styles.itemsWrap}>
-                    <div className={`${styles.items} ${styles.marquee}`}>
-                        {[...Array(10)].map((_, index) => (
-                            <div key={index} className={styles.item}>
+                <div className={styles.tickers}>
+                    <Marquee speed={50} gradient={true}> {/* Используем Marquee */}
+                        {Array.from({ length: 10 }).map((_, index) => (
+                            <h2 key={index} className={styles.ticker__head}>
                                 Победа Соревнования Календарь
-                            </div>
+                            </h2>
                         ))}
-                    </div>
-                    <div aria-hidden="true" className={`${styles.items} ${styles.marquee}`}>
-                        {[...Array(10)].map((_, index) => (
-                            <div key={index} className={styles.item}>
+                    </Marquee>
+                    <Marquee speed={80} gradient={true}> {/* Используем Marquee */}
+                        {Array.from({ length: 10 }).map((_, index) => (
+                            <h2 key={index} className={styles.ticker__head}>
                                 Победа Соревнования Календарь
-                            </div>
+                            </h2>
                         ))}
-                    </div>
+                    </Marquee>
+                    <Marquee speed={40} gradient={true}> {/* Используем Marquee */}
+                        {Array.from({ length: 10 }).map((_, index) => (
+                            <h2 key={index} className={styles.ticker__head}>
+                                Победа Соревнования Календарь
+                            </h2>
+                        ))}
+                    </Marquee>
+                    <Marquee speed={60} gradient={true}> {/* Используем Marquee */}
+                        {Array.from({ length: 10 }).map((_, index) => (
+                            <h2 key={index} className={styles.ticker__head}>
+                                Победа Соревнования Календарь
+                            </h2>
+                        ))}
+                    </Marquee>
                 </div>
             </div>
 
