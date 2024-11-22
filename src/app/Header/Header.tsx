@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import AuthModal from '@/app/components/AuthModal';
 import styles from './header.module.css';
+import Link from "next/link";
 
 export default function Header() {
     const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
@@ -18,7 +19,7 @@ export default function Header() {
             <div className={styles.buttonContainer}>
                 <span className={styles.text}>Главная</span>
                 <span className={styles.text}>Новости</span>
-                <span className={styles.text}>Соревнования</span>
+                <Link href="/CompetitionCalendar" className={styles.text}>Соревнования</Link>
                 <span className={styles.text}>Ближайшие соревнования</span>
             </div>
             <div className={styles.authButtons}>

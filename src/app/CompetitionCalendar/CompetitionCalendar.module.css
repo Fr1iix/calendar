@@ -1,0 +1,90 @@
+.container {
+    @apply bg-gradient-to-br from-gray-50 to-gray-100 min-h-screen p-4 md:p-8;
+}
+
+.card {
+    @apply bg-white shadow-2xl rounded-2xl overflow-hidden border border-gray-100;
+}
+
+.title {
+    @apply text-3xl font-extrabold text-center text-transparent
+    bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600
+    mb-8 tracking-tight;
+}
+
+.filterSection {
+    @apply bg-white/80 backdrop-blur-sm rounded-xl p-6 mb-6
+    border border-gray-200/50 shadow-lg;
+}
+
+.filterTitle {
+    @apply text-xl font-semibold mb-4 text-gray-800
+    border-b border-gray-200 pb-2;
+}
+
+.filterGrid {
+    @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3
+    lg:grid-cols-4 gap-4;
+}
+
+.filterLabel {
+    @apply block text-sm font-medium text-gray-700
+    mb-1 tracking-tight;
+}
+
+.filterInput {
+    @apply block w-full rounded-lg border-gray-300
+    shadow-sm focus:border-blue-500 focus:ring
+    focus:ring-blue-200 focus:ring-opacity-50
+    transition duration-200 ease-in-out;
+}
+
+.tableContainer {
+    @apply overflow-x-auto bg-white rounded-xl
+    border border-gray-200 shadow-md;
+}
+
+.table {
+    @apply w-full table-auto border-collapse;
+}
+
+.tableHead {
+    @apply bg-gradient-to-r from-blue-100 to-purple-100
+    text-gray-800 uppercase text-xs tracking-wider;
+}
+
+.tableHeadCell {
+    @apply px-4 py-3 text-left font-semibold border-b
+    border-gray-200;
+}
+
+.tableRow {
+    @apply hover:bg-blue-50/50 transition duration-150
+    ease-in-out;
+}
+
+.tableCell {
+    @apply px-4 py-3 border-b border-gray-100
+    text-sm text-gray-700;
+}
+
+.emptyState {
+    @apply text-center text-gray-500 italic p-4;
+}
+
+/* Анимация при загрузке */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.fadeInAnimation {
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* Адаптивность */
+@media (max-width: 640px) {
+    .filterGrid {
+        @apply grid-cols-1;
+    }
+}
