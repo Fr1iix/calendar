@@ -1,8 +1,12 @@
 'use client';
-import styles from './header.module.css';
+import React, { useState } from 'react';
 import Image from 'next/image';
+import AuthModal from '@/app/components/AuthModal';
+import styles from './header.module.css';
 
 export default function Header() {
+    const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+
     return (
         <div className={styles.head}>
             <div className={styles.logoContainer}>
@@ -18,8 +22,23 @@ export default function Header() {
                 <span className={styles.text}>Ближайшие соревнования</span>
             </div>
             <div className={styles.authButtons}>
-                <button className={styles.authButton}>Войти</button>
-                <button className={styles.authButton}>Зарегистрироваться</button>
+                <button
+                    className={styles.authButton}
+                    onClick={() => setIsAuthModalOpen(true)}
+                >
+                    Войти
+                </button>
+                <button
+                    className={styles.authButton}
+                    onClick={() => setIsAuthModalOpen(true)}
+                >
+                    Зарегистрироваться
+                </button>
+
+                <AuthModal
+                    isOpen={isAuthModalOpen}
+                    onClose={() => setIsAuthModalOpen(false)}
+                />
             </div>
         </div>
     );
