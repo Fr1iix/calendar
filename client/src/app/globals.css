@@ -28,8 +28,19 @@ body {
   color: var(--text-color);
   transition: all 0.3s ease;
   font-family: 'Dela Gothic One', sans-serif;
+  display: flex; /* Используем flexbox для body */
+  flex-direction: column; /* Вертикальное выравнивание */
+  min-height: 100vh; /* Минимальная высота 100% от высоты экрана */
+  margin: 0; /* Убираем отступы */
 }
 
+main {
+  flex: 1; /* Позволяет основному контенту занимать оставшееся пространство */
+}
 
-
-
+footer {
+  text-align: center;
+  padding: 20px;
+  background-color: #f1f1f1; /* Цвет фона футера */
+  width: 100%; /* Ширина футера 100% */
+}

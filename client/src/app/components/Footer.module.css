@@ -1,0 +1,45 @@
+/* components/Footer.module.css */
+.footer {
+    background-color: #314367; /* Цвет фона футера */
+    color: white; /* Цвет текста */
+    padding: 20px 0; /* Отступы */
+    text-align: center; /* Центрирование текста */
+}
+
+.container {
+    max-width: 1200px; /* Максимальная ширина контейнера */
+    margin: 0 auto; /* Центрирование контейнера */
+    padding: 0 20px; /* Отступы по бокам */
+    display: flex; /* Используем flexbox для выравнивания */
+    justify-content: space-between; /* Распределяем элементы по краям */
+    align-items: center; /* Центрирование по вертикали */
+}
+
+.logoContainer {
+    display: flex; /* Используем flexbox для логотипа и названия */
+    align-items: center; /* Центрирование по вертикали */
+}
+
+.title {
+    margin-left: 10px; /* Отступ слева от названия */
+    font-size: 24px; /* Размер шрифта для названия */
+}
+
+.centerText {
+    flex-grow: 1; /* Позволяет этому блоку занимать оставшееся пространство */
+    text-align: center; /* Центрирование текста */
+}
+
+.contactInfo {
+    text-align: left; /* Выравнивание текста влево */
+    font-size: 14px; /* Размер шрифта для контактной информации */
+}
+
+.email {
+    color: white; /* Цвет текста для email */
+    text-decoration: none; /* Убираем подчеркивание */
+}
+
+.email:hover {
+    text-decoration: underline; /* Подчеркивание при наведении */
+}
