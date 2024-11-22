@@ -18,13 +18,7 @@ app.use(express.json())
 app.use(express.static(path.resolve(__dirname, 'static')))
 app.use(fileUpload({}))
 app.use('/api', router)
-// Настройка для обработки загрузки файлов
-app.use(fileUpload());
-
-// Статические файлы для загрузки (например, для изображения или документов)
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use(pdfRoutes);
-
 const start = async () => {
     try {
         await sequelize.authenticate()
