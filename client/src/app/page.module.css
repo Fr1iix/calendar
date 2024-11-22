@@ -1,0 +1,61 @@
+.main {
+    background-color: #FFFFFF;
+    color: #314367;
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+.heroSection {
+    display: flex;
+    height: 50vh; /* Половина высоты экрана для отдела hero */
+}
+
+.imageContainer {
+    flex: 1;
+    position: relative;
+}
+
+.textContainer {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    text-align: center;
+}
+
+.textContainer h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.textContainer p {
+    font-size: 1.2rem;
+}
+
+.features {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 2rem;
+    padding: 2rem;
+}
+
+.card {
+    background-color: #f0f4fa;
+    padding: 2rem;
+    border-radius: 8px;
+    width: 30%;
+}
+
+.card h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.footer {
+    margin-top: 2rem;
+    padding: 1rem;
+    background-color: #314367;
+    color: white;
+}
