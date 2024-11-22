@@ -6,7 +6,7 @@ export default function Home() {
         <main className={styles.main}>
             <div className={styles.heroSection}>
                 <div className={styles.imageContainer}>
-                    <Image src="/sports.jpg" alt="Sports" layout='fill' objectFit='cover' />
+                    <Image src="/main.png" alt="Sports" layout='fill' objectFit='cover' />
                 </div>
                 <div className={styles.textContainer}>
                     <h1>Добро пожаловать на наш <br/>Спортивный Календарь</h1>

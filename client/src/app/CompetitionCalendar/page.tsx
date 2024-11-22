@@ -45,7 +45,7 @@ const competitionsData = [
   }
 ];
 
-export default function CompetitionCalendar() {
+export default function Page() {
   const [filters, setFilters] = useState({
     sport: '',
     discipline: '',

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import Header from "./Header/Header";
 import React from "react";
-import CompetitionCalendar from "@/app/CompetitionCalendar/CompetitionCalendar";
+import Page from "@/app/CompetitionCalendar/page";
 
 
 export const metadata: Metadata = {
@@ -20,7 +20,7 @@ export default function RootLayout({
       <body>
       <Header/>
       {children}
-      <CompetitionCalendar />
+      <Page />
       </body>
       </body>
       </html>
