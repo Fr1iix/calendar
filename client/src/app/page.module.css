@@ -3,11 +3,11 @@
     color: #314367;
     font-family: Arial, sans-serif;
     text-align: center;
-    background-image: url('/bg.png'); /* укажите путь к вашему изображению здесь */
-    background-size: cover; /* Изображение будет покрывать весь фон */
-    background-position: center; /* Центровка изображения */
-    background-repeat: no-repeat; /* Избегайте повторения изображения */
-    min-height: 100vh; /* Обеспечение охвата всей высоты страницы */
+    background-image: url('/bg.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
 }
 
 .heroSection {
@@ -60,7 +60,46 @@
 .separator {
     height: 160px;
     background-color: #314367;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+}
+
+.itemsWrap {
+    position: relative;
+    display: flex;
+    overflow: hidden;
+    gap: 20px;
     width: 100%;
+}
+
+.items {
+    display: flex;
+    gap: 20px;
+    min-width: 100%;
+}
+
+.item {
+    background: #ccc;
+    padding: 20px;
+    border-radius: 6px;
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.marquee {
+    animation: marquee 10s linear infinite;
+}
+
+@keyframes marquee {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-100%);
+    }
 }
 
 .features {
@@ -71,15 +110,24 @@
 }
 
 .card {
-    background-color: #f0f4fa;
+    background-color: #98b3d9;
     padding: 2rem;
     border-radius: 8px;
     width: 30%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
 }
 
 .card h2 {
+    margin-top: 10px;
     font-size: 1.5rem;
     margin-bottom: 1rem;
+}
+
+.card p {
+    color: black;
 }
 
 .footer {
