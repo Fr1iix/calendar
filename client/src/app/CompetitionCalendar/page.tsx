@@ -185,7 +185,7 @@ export default function Page() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">Дата от</label>
+              <label className="block text-sm font-medium text-gray-700">Дата от </label>
               <input
                   type="date"
                   name="dateFrom"
@@ -196,7 +196,7 @@ export default function Page() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700">Дата до</label>
+              <label className="block text-sm font-medium text-gray-700">Дата до </label>
               <input
                   type="date"
                   name="dateTo"
