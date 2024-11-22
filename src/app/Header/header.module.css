@@ -1,0 +1,57 @@
+.head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.8rem;
+    background: #314367;
+    color: #b5bab5;
+    width: 100%;
+    box-shadow: 0px 4px 2px -2px gray;
+}
+
+.logoContainer {
+    display: flex;
+    align-items: center;
+}
+
+.calendarText {
+    color: white;
+    margin-left: 10px;
+    line-height: 1.2;
+}
+
+.buttonContainer {
+    display: flex;
+    margin-right: 250px;
+    justify-content: center;
+    flex-grow: 1;
+}
+
+.text {
+    display: inline-flex;
+    align-items: center;
+    margin: 0 15px;
+    color: white;
+    cursor: pointer;
+}
+
+.authButtons {
+    display: flex;
+    align-items: center;
+}
+
+.authButton {
+    background: none;
+    border: 2px solid white;
+    color: white;
+    margin-left: 15px;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.authButton:hover {
+    background-color: white;
+    color: #314367;
+}
