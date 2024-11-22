@@ -51,6 +51,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 {activeTab === 'login' ? (
                     <form onSubmit={handleLogin} className={styles.form}>
                         <h2>Вход в аккаунт</h2>
+                        <h2></h2>
                         <input
                             type="email"
                             placeholder="Email"
@@ -74,6 +75,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 ) : (
                     <form onSubmit={handleRegister} className={styles.form}>
                         <h2>Регистрация</h2>
+                        <h2></h2>
                         <input
                             type="text"
                             placeholder="Имя"

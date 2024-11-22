@@ -15,14 +15,16 @@
     background: white;
     padding: 20px;
     border-radius: 8px;
-    width: 400px;
+    width: 500px;
     max-width: 90%;
+    display: flex;
+    flex-direction: column;
     position: relative;
 }
 
 .closeButton {
     position: absolute;
-    top: 0px;
+    top: 0;
     right: 4px;
     font-size: 24px;
     background: none;
@@ -47,11 +49,16 @@
     composes: tab;
     background: #314367;
     color: white;
+    border-radius: 8px;
+
 }
 
 .form {
+    flex-grow: 1;
     display: flex;
     flex-direction: column;
+    height: 100%;
+
 }
 
 .form h2 {
@@ -73,6 +80,7 @@
     border: none;
     border-radius: 4px;
     cursor: pointer;
+
 }
 
 .submitButton:hover {
