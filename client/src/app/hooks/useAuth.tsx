@@ -1,21 +1,16 @@
 import { useState, useEffect } from 'react';
 
-// Хук useAuth для управления состоянием авторизации
 export function useAuth() {
-    const [user, setUser] = useState<{
-        token?: string;
-        firstName?: string;
-        email?: string;
-        role?: string;
-    } | null>(null);
+    const [user, setUser] = useState(() => {
+        const storedUser = localStorage.getItem('user');
+        return storedUser ? JSON.parse(storedUser) : null;
+    });
 
     useEffect(() => {
         const token = localStorage.getItem('token');
-        if (token) {
-            const storedUser = localStorage.getItem('user');
-            if (storedUser) {
-                setUser(JSON.parse(storedUser));
-            }
+        const storedUser = localStorage.getItem('user');
+        if (token && storedUser) {
+            setUser(JSON.parse(storedUser));
         }
     }, []);
 

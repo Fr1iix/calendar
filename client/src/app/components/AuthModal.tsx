@@ -75,10 +75,12 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalP
 
     const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
+
         if (registrationData.password !== registrationData.confirmPassword) {
             alert('Пароли не совпадают');
             return;
         }
+
         try {
             const response = await fetch('/api/auth/registration', {
                 method: 'POST',
@@ -102,13 +104,22 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalP
                 throw new Error(data.message || 'Ошибка регистрации');
             }
 
-            // Сохраняем токен в localStorage
-            localStorage.setItem('token', data.token);
-            login({ token: data.token, ...data.user });
+            console.log(data); // Для отладки
 
-            onAuthSuccess(data.user);
-            onClose();
-        } catch (error: unknown) {
+            if (data.token) {
+                // Сохранение токена и данных пользователя
+                const userData = { token: data.token, email: registrationData.email, ...data.user };
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('user', JSON.stringify(userData));
+                login(userData);
+
+                // Закрытие модального окна
+                onAuthSuccess(userData);
+                onClose();
+            } else {
+                throw new Error('Токен не получен в ответе');
+            }
+        } catch (error) {
             if (error instanceof Error) {
                 alert(error.message);
             }
