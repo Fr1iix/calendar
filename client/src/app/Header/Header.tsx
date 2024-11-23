@@ -18,7 +18,7 @@ export default function Header() {
             </div>
             <div className={styles.buttonContainer}>
                 <Link href="/" className={styles.text}>Главная</Link>
-                <span className={styles.text}>Новости</span>
+                <Link href="/news" className={styles.text}>Новости</Link>
                 <Link href="/CompetitionCalendar" className={styles.text}>Соревнования</Link>
                 <span className={styles.text}>Ближайшие соревнования</span>
             </div>
