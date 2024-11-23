@@ -1,5 +1,3 @@
-
-'use client';
 import React, { useState } from 'react';
 import styles from './AuthModal.module.css';
 
@@ -7,6 +5,7 @@ interface AuthModalProps {
     isOpen: boolean;
     onClose: () => void;
 }
+
 
 export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
     const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');

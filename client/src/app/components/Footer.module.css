@@ -28,6 +28,7 @@
 .centerText {
     flex-grow: 1; /* Позволяет этому блоку занимать оставшееся пространство */
     text-align: center; /* Центрирование текста */
+    font-size: 18px;
 }
 
 .contactInfo {

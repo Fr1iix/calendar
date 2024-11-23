@@ -21,7 +21,6 @@ export default function Home() {
                     </Link>
                 </div>
             </div>
-
             <div className={styles.separator}>
                 <div className={styles.tickers}>
                     <Marquee speed={50} gradient={true}> {/* Используем Marquee */}

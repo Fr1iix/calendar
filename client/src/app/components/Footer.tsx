@@ -8,7 +8,7 @@ const Footer = () => {
         <footer className={styles.footer}>
             <div className={styles.container}>
                 <div className={styles.logoContainer}>
-                    <Image src={"/logo.png"} alt="Логотип" width={50} height={50} />
+                    <Image src={"/logo.png"} alt="Логотип" width={80} height={80} />
                     <h2 className={styles.title}>Спортивный календарь</h2>
                 </div>
                 <div className={styles.centerText}>
