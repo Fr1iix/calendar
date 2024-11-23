@@ -43,4 +43,5 @@ footer {
   padding: 20px;
   background-color: #f1f1f1; /* Цвет фона футера */
   width: 100%; /* Ширина футера 100% */
+  margin-top: auto;
 }

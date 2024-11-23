@@ -1,8 +1,24 @@
-'use client';
+'use client'; // Ensure this is a client-side component
 
 import React, { useState } from 'react';
-import styles from './CompetitionCalendar.module.css'
-const competitionsData = [
+import styles from './CompetitionCalendar.module.css';
+import YandexMap from './YandexMap'; // Импорт карты
+
+interface Competition {
+  date: string;
+  sport: string;
+  discipline: string;
+  program: string;
+  venue: string;
+  participants: number;
+  genderAge: string;
+  competitionType: string;
+  city: string;
+  latitude: number;
+  longitude: number;
+}
+
+const competitionsData: Competition[] = [
   {
     date: '2024-07-15',
     sport: 'Баскетбол',
@@ -11,7 +27,10 @@ const competitionsData = [
     venue: 'Городской спортивный комплекс',
     participants: 12,
     genderAge: 'Мужчины',
-    competitionType: 'Чемпионат'
+    competitionType: 'Чемпионат',
+    city: 'Москва',
+    latitude: 55.751574,
+    longitude: 37.573856,
   },
   {
     date: '2024-08-20',
@@ -21,7 +40,10 @@ const competitionsData = [
     venue: 'Водный центр',
     participants: 25,
     genderAge: 'Женщины',
-    competitionType: 'Межрегиональный'
+    competitionType: 'Межрегиональный',
+    city: 'Санкт-Петербург',
+    latitude: 59.934280,
+    longitude: 30.335099,
   },
   {
     date: '2024-09-10',
@@ -31,7 +53,10 @@ const competitionsData = [
     venue: 'Спортивный дворец',
     participants: 8,
     genderAge: 'Женщины',
-    competitionType: 'Кубок'
+    competitionType: 'Кубок',
+    city: 'Новосибирск',
+    latitude: 55.008353,
+    longitude: 82.935733,
   },
   {
     date: '2024-07-22',
@@ -41,11 +66,14 @@ const competitionsData = [
     venue: 'Городской бассейн',
     participants: 15,
     genderAge: 'Юниоры',
-    competitionType: 'Районный'
-  }
+    competitionType: 'Районный',
+    city: 'Казань',
+    latitude: 55.796127,
+    longitude: 49.106414,
+  },
 ];
 
-export default function Page() {
+const Page = () => {
   const [filters, setFilters] = useState({
     sport: '',
     discipline: '',
@@ -55,118 +83,127 @@ export default function Page() {
     genderAge: '',
     dateFrom: '',
     dateTo: '',
-    competitionType: ''
+    competitionType: '',
   });
 
-  const handleFilterChange = (e: { target: { name: any; value: any; }; }) => {
+  const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFilters(prev => ({
+    setFilters((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
-  const filteredCompetitions = competitionsData.filter(competition => {
+  const filteredCompetitions = competitionsData.filter((competition) => {
     return Object.entries(filters).every(([key, value]) => {
       // Пропускаем пустые фильтры
       if (!value) return true;
 
-      switch(key) {
-        case 'participants':
-          return competition[key] >= Number(value);
-        case 'dateFrom':
-          return !value || competition.date >= value;
-        case 'dateTo':
-          return !value || competition.date <= value;
-        default:
-          return // competition[key].toLowerCase().includes(value.toLowerCase());
+      // Убедитесь, что ключ является ключом из Competition
+      if (key in competition) {
+        switch (key) {
+          case 'participants':
+            // Явно приводим к number, так как мы знаем, что participants это число
+            return (competition.participants >= (value ? Number(value) : 0));
+          case 'dateFrom':
+            return !value || competition.date >= value;
+          case 'dateTo':
+            return !value || competition.date <= value;
+          default:
+            const competitionValue = competition[key as keyof Competition];
+            if (typeof competitionValue === 'string') {
+              return competitionValue.toLowerCase().includes(value.toLowerCase());
+            }
+            return false;
+        }
       }
+      return false;
     });
   });
 
   return (
-      <div className={styles.filterSection}>
-        <h2 className={styles.filterTitle}>Фильтры</h2>
-        <div className={styles.filterGrid}>
-          <div>
-            <label className={styles.filterLabel}>Вид спорта</label>
-            <select
-                name="sport"
-                value={filters.sport}
-                onChange={handleFilterChange}
-                className={styles.filterInput}
-            >
-              <option value="">Все виды спорта</option>
-              <option>Баскетбол</option>
-              <option>Плавание</option>
-            </select>
-          </div>
+      <div>
+        {/* Фильтры */}
+        <div className={styles.filterSection}>
+          <h2 className={styles.filterTitle}>Фильтры</h2>
+          <div className={styles.filterGrid}>
+            <div>
+              <label className={styles.filterLabel}>Вид спорта</label>
+              <select
+                  name="sport"
+                  value={filters.sport}
+                  onChange={handleFilterChange}
+                  className={styles.filterInput}
+              >
+                <option value="">Все виды спорта</option>
+                <option>Баскетбол</option>
+                <option>Плавание</option>
+              </select>
+            </div>
 
-          <div>
-            <label className={styles.filterLabel}>Дисциплина</label>
-            <input
-                type="text"
-                name="discipline"
-                value={filters.discipline}
-                onChange={handleFilterChange}
-                placeholder="Введите дисциплину"
-                className={styles.filterInput}
-            />
-          </div>
+            <div>
+              <label className={styles.filterLabel}>Дисциплина</label>
+              <input
+                  type="text"
+                  name="discipline"
+                  value={filters.discipline}
+                  onChange={handleFilterChange}
+                  placeholder="Введите дисциплину"
+                  className={styles.filterInput}
+              />
+            </div>
 
-          <div>
-            <label className={styles.filterLabel}>Программа</label>
-            <input
-                type="text"
-                name="program"
-                value={filters.program}
-                onChange={handleFilterChange}
-                placeholder="Введите программу"
-                className={styles.filterInput}
-            />
-          </div>
+            <div>
+              <label className={styles.filterLabel}>Программа</label>
+              <input
+                  type="text"
+                  name="program"
+                  value={filters.program}
+                  onChange={handleFilterChange}
+                  placeholder="Введите программу"
+                  className={styles.filterInput}
+              />
+            </div>
 
-          <div>
-            <label className={styles.filterLabel}>Место проведения</label>
-            <input
-                type="text"
-                name="venue"
-                value={filters.venue}
-                onChange={handleFilterChange}
-                placeholder="Введите место"
-                className={styles.filterInput}
-            />
-          </div>
+            <div>
+              <label className={styles.filterLabel}>Место проведения</label>
+              <input
+                  type="text"
+                  name="venue"
+                  value={filters.venue}
+                  onChange={handleFilterChange}
+                  placeholder="Введите место"
+                  className={styles.filterInput}
+              />
+            </div>
 
-          <div>
-            <label className={styles.filterLabel}>Минимальное число участников</label>
-            <input
-                type="number"
-                name="participants"
-                value={filters.participants}
-                onChange={handleFilterChange}
-                placeholder="Число участников"
-                min="0"
-                className={styles.filterInput}
-            />
-          </div>
+            <div>
+              <label className={styles.filterLabel}>Минимальное число участников</label>
+              <input
+                  type="number"
+                  name="participants"
+                  value={filters.participants}
+                  onChange={handleFilterChange}
+                  placeholder="Число участников"
+                  min="0"
+                  className={styles.filterInput}
+              />
+            </div>
 
-          <div>
-            <label className={styles.filterLabel}>Пол/Возраст</label>
-            <select
-                name="genderAge"
-                value={filters.genderAge}
-                onChange={handleFilterChange}
-                className={styles.filterInput}
-            >
-              <option value="">Все</option>
-              <option>Мужчины</option>
-              <option>Женщины</option>
-              <option>Юниоры</option>
-            </select>
-          </div>
-
-          <div>
+            <div>
+              <label className={styles.filterLabel}>Пол/Возраст</label>
+              <select
+                  name="genderAge"
+                  value={filters.genderAge}
+                  onChange={handleFilterChange}
+                  className={styles.filterInput}
+              >
+                <option value="">Все</option>
+                <option>Мужчины</option>
+                <option>Женщины</option>
+                <option>Юниоры</option>
+              </select>
+            </div>
 
             <div>
               <label className="block text-sm font-medium text-gray-700">Тип соревнования</label>
@@ -207,8 +244,11 @@ export default function Page() {
             </div>
           </div>
         </div>
-      </div>
-)
-  ;
-}
 
+        {/* Карта с отфильтрованными соревнованиями */}
+        <YandexMap events={filteredCompetitions} />
+      </div>
+  );
+};
+
+export default Page;
