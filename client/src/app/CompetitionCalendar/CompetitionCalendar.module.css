@@ -1,4 +1,3 @@
-/* CompetitionCalendar.module.css */
 .pageWrapper {
     display: flex;
     justify-content: center;
@@ -16,7 +15,6 @@
     box-sizing: border-box;
 }
 
-/* Существующие стили фильтров */
 .filterSection {
     margin-bottom: 2rem;
 }
@@ -25,30 +23,37 @@
     margin-bottom: 1rem;
     font-size: 1.5rem;
     font-weight: 600;
-    color: #374151;
+    color: #000000;
 }
 
 .filterGrid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(5, 1fr); /* 5 равных столбцов */
     gap: 1rem;
+    align-items: start; /* Выровнять элементы по верхнему краю */
 }
 
-.filterInput {
-    width: 100%;
-    padding: 0.5rem 0.75rem;
-    font-size: 0.875rem;
-    border: 1px solid #d1d5db;
-    border-radius: 0.375rem;
+.filterItem {
+    display: flex;
+    flex-direction: column;
+}
+
+.filterInput,
+.mapButton {
+    width: 100%; /* Заполнить всю ширину */
+    height: 40px; /* Единая высота для всех элементов */
+    padding: 0.5rem 0.75rem; /* Отступы внутри элемента */
+    font-size: 0.875rem; /* Одинаковый размер текста */
+    border: 1px solid #d1d5db; /* Границы */
+    border-radius: 0.375rem; /* Скругление углов */
     background-color: #fff;
     transition: border-color 0.2s, box-shadow 0.2s;
-    box-sizing: border-box;
-    height: 38px;
+    box-sizing: border-box; /* Учет границ и отступов в размере */
 }
 
 .filterInput:focus {
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    border-color: #3b82f6; /* Цвет границы при фокусе */
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); /* Подсветка */
     outline: none;
 }
 
@@ -61,17 +66,48 @@
     font-weight: 500;
     color: #374151;
     margin-bottom: 0.5rem;
-    display: block;
-    min-height: 1.25rem;
+    min-height: 3rem; /* Минимальная высота для равного расстояния */
+    display: flex;
+    align-items: center; /* Выровнять текст по центру вертикально */
 }
 
-/* Новые стили для таблицы */
+/* Стили кнопки "Показать карту" */
+.mapButton {
+    background-color: #314367; /* Синий цвет для кнопки */
+    color: #ffffff; /* Белый текст */
+    font-weight: 500; /* Полужирный шрифт */
+    text-align: center; /* Центровка текста */
+    cursor: pointer; /* Указатель */
+    border: 1px solid #d1d5db; /* Граница кнопки */
+    border-radius: 0.375rem; /* Скругленные углы */
+    transition: background-color 0.2s, box-shadow 0.2s; /* Плавный переход */
+}
+
+.mapButton:hover {
+    background-color: #1e3a5f; /* Темно-синий цвет при наведении */
+    border-color: #1e3a5f; /* Темный цвет границы */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08); /* Тень */
+}
+
+.mapButton:focus {
+    outline: none; /* Убираем стандартный фокус */
+    border-color: #3b82f6; /* Синий цвет фокуса */
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2); /* Подсветка при фокусе */
+}
+
+.mapButton:active {
+    background-color: #162d49; /* Еще более темный синий при клике */
+    box-shadow: none; /* Убираем тень при нажатии */
+}
+
+/* Existing table styles remain the same */
 .competitionTable {
     width: 100%;
-    margin-top: 2rem; /* Отступ сверху */
+    margin-top: 2rem;
     margin-bottom: 2rem;
     overflow-x: auto;
 }
+
 .competitionTable table {
     width: 100%;
     border-collapse: collapse;
@@ -94,7 +130,10 @@
     padding: 1rem;
     border-bottom: 1px solid #e5e7eb;
 }
-
+.competitionTable td:nth-child(5) {
+    text-align: center; /* Центровка по горизонтали */
+    vertical-align: middle; /* Центровка по вертикали */
+}
 .dateCell {
     width: 120px;
 }
@@ -154,85 +193,6 @@
 }
 
 .venueCell {
-    text-align: right;
+    text-align: left;
     min-width: 200px;
-}
-
-.city {
-    font-size: 0.875rem;
-    color: #111827;
-}
-
-.organizer {
-    font-size: 0.75rem;
-    color: #6b7280;
-    margin-top: 0.25rem;
-}
-
-/* Новый столбец для номера события */
-.eventNumberCell {
-    text-align: center;
-    width: 80px;
-    font-weight: bold;
-    color: #314367;
-}
-
-/* Новый стиль для Места проведения */
-.venueCell {
-    text-align: left; /* Это заставит текст выравниваться по левому краю */
-    min-width: 200px;
-}
-
-.venueCell div {
-    display: block;
-    margin-bottom: 5px;
-}
-
-.toggleMapButton {
-    background-color: #314367;
-    color: #ffffff;
-    border: none;
-    border-radius: 0.375rem;
-    padding: 0.75rem 1.25rem;
-    font-size: 0.875rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.2s, box-shadow 0.2s;
-    margin-bottom: 1rem;
-}
-
-.toggleMapButton:hover {
-    background-color: #314367;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
-}
-
-/* Новый столбец для количества участников */
-.participantsCell {
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: #111827;
-    text-align: center;
-}
-
-/* Адаптивность */
-@media (max-width: 768px) {
-    .competitionTable {
-        font-size: 0.875rem;
-    }
-
-    .dateCell {
-        width: auto;
-    }
-
-    .titleCell {
-        min-width: 200px;
-    }
-
-    .venueCell {
-        min-width: 150px;
-    }
-
-    .participantsCell {
-        font-size: 0.75rem;
-    }
 }
