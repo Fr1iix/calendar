@@ -1,0 +1,121 @@
+/* Основной контейнер */
+.newsContainer {
+    width: 80%; /* Уменьшаем ширину контейнера */
+    max-width: 1200px; /* Ограничиваем максимальную ширину */
+    margin: 20px auto; /* Центрируем контейнер */
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 12px; /* Скругленные углы */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1),
+    0 6px 20px rgba(0, 0, 0, 0.1); /* Тени */
+}
+
+/* Сетка новостей */
+.newsList {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* По умолчанию 3 колонки */
+    gap: 20px; /* Отступы между карточками */
+}
+
+/* Адаптивность для меньших экранов */
+@media (max-width: 1024px) {
+    .newsList {
+        grid-template-columns: repeat(2, 1fr); /* 2 колонки на средних экранах */
+    }
+}
+
+@media (max-width: 768px) {
+    .newsList {
+        grid-template-columns: 1fr; /* 1 колонка на маленьких экранах */
+    }
+}
+
+/* Карточка новости */
+.newsItem {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #fff;
+    transition: transform 0.2s;
+    text-align: center;
+}
+
+.newsItem:hover {
+    transform: scale(1.02); /* Эффект увеличения при наведении */
+}
+
+/* Обертка для изображения */
+.imageWrapper {
+    width: 100%;
+    max-width: 100px; /* Ограничение ширины изображения */
+    height: 100px;
+    margin: 0 auto;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f5f5f5;
+    border-radius: 8px; /* Скругление углов */
+}
+
+/* Изображение новости */
+.newsImage {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: cover;
+}
+
+/* Содержимое новости */
+.newsContent {
+    margin-top: auto; /* Автоматически перемещаем текст к нижнему краю */
+    padding-bottom: 10px; /* Отступ от нижнего края карточки */
+}
+
+/* Дата новости */
+.newsDate {
+    margin-top: 10px; /* Отступ сверху */
+    margin-bottom: 20px; /* Отступ снизу для разделения с текстом */
+    font-size: 0.9em;
+    color: #666;
+}
+
+/* Ссылка на новость */
+.newsLink {
+    font-weight: bold;
+    color: #333;
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.newsLink:hover {
+    color: #007bff;
+}
+
+.formContainer {
+    margin-bottom: 2rem;
+}
+
+.input {
+    width: 100%;
+    padding: 0.5rem;
+    margin: 0.5rem 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.submitButton {
+    padding: 0.8rem 1.5rem;
+    background-color: #314367;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.submitButton:hover {
+    background-color: #2a3a53;
+}
