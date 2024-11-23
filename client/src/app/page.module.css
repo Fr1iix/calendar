@@ -149,3 +149,32 @@
     background-color: #314367;
     color: white;
 }
+
+@media (max-width: 768px) {
+    .heroSection {
+        flex-direction: column; /* Вертикальное расположение для мобильных */
+    }
+
+    .textContainer h1 {
+        font-size: 32px; /* Уменьшение размера заголовка на мобильных */
+    }
+
+    .textContainer p {
+        font-size: 18px; /* Уменьшение размера текста на мобильных */
+    }
+
+    .eventButton {
+        width: 100%; /* Кнопка занимает всю ширину на мобильных */
+        font-size: 18px; /* Увеличение размера шрифта */
+    }
+
+    .features {
+        flex-direction: column; /* Вертикальное расположение карточек */
+        align-items: center; /* Центрирование карточек */
+    }
+
+    .card {
+        width: 90%; /* Ширина карточек на мобильных */
+        margin-bottom: 20px; /* Отступ между карточками */
+    }
+}

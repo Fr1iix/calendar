@@ -86,3 +86,20 @@
 .submitButton:hover {
     background-color: #314367;
 }
+
+@media (max-width: 768px) {
+    .modalContent {
+        width: 90%; /* Устанавливаем ширину модального окна на мобильных */
+        padding: 10px; /* Уменьшаем отступы */
+    }
+
+    .input {
+        font-size: 16px; /* Увеличиваем размер шрифта для ввода */
+        padding: 8px; /* Уменьшаем внутренние отступы */
+    }
+
+    .submitButton {
+        font-size: 16px; /* Увеличиваем размер шрифта для кнопки */
+        padding: 10px; /* Уменьшаем отступы */
+    }
+}

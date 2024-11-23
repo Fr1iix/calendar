@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import styles from './AuthModal.module.css';
+import { useAuth } from '../hooks/useAuth';
 
 interface AuthModalProps {
     isOpen: boolean;
     onClose: () => void;
-    onAuthSuccess: (name: string) => void;
+    onAuthSuccess: (userData: any) => void;
 }
 
 export default function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalProps) {
+    const { login } = useAuth(); // Используем кастомный хук useAuth
     const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
 
-    // Расширенное состояние для регистрации
     const [registrationData, setRegistrationData] = useState({
         email: '',
         password: '',
@@ -22,13 +23,11 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalP
         role: 'user'
     });
 
-    // Состояние для входа
     const [loginData, setLoginData] = useState({
         email: '',
         password: ''
     });
 
-    // Обновление данных входа
     const handleLoginChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setLoginData(prev => ({
@@ -37,7 +36,6 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalP
         }));
     };
 
-    // Обновление данных регистрации
     const handleRegistrationChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setRegistrationData(prev => ({
@@ -56,20 +54,17 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalP
                 },
                 body: JSON.stringify(loginData),
             });
-
             const data = await response.json();
 
             if (!response.ok) {
                 throw new Error(data.message || 'Ошибка входа');
             }
 
-            // Сохраняем токен и данные пользователя
+            // Сохраняем токен в localStorage
             localStorage.setItem('token', data.token);
+            login(data.user); // Обновляем состояние пользователя
 
-            // Используем данные пользователя из ответа
-            const userName = data.user?.firstName || data.user?.email || loginData.email;
-
-            onAuthSuccess(userName);
+            onAuthSuccess(data.user); // Передаём данные пользователя дальше
             onClose();
         } catch (error: unknown) {
             if (error instanceof Error) {
@@ -81,7 +76,6 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalP
     const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        // Проверка совпадения паролей
         if (registrationData.password !== registrationData.confirmPassword) {
             alert('Пароли не совпадают');
             return;
@@ -95,12 +89,12 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalP
                 },
                 body: JSON.stringify({
                     email: registrationData.email,
-                    password: registrationData.password, // ВАЖНО
+                    password: registrationData.password,
                     firstName: registrationData.firstName,
                     lastName: registrationData.lastName,
                     middleName: registrationData.middleName,
                     phone: registrationData.phone,
-                    role: registrationData.role
+                    role: registrationData.role,
                 }),
             });
 
@@ -110,10 +104,22 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalP
                 throw new Error(data.message || 'Ошибка регистрации');
             }
 
-            localStorage.setItem('token', data.token);
-            onAuthSuccess(registrationData.firstName || registrationData.email);
-            onClose();
-        } catch (error: unknown) {
+            console.log(data); // Для отладки
+
+            if (data.token) {
+                // Сохранение токена и данных пользователя
+                const userData = { token: data.token, email: registrationData.email, ...data.user };
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('user', JSON.stringify(userData));
+                login(userData);
+
+                // Закрытие модального окна
+                onAuthSuccess(userData);
+                onClose();
+            } else {
+                throw new Error('Токен не получен в ответе');
+            }
+        } catch (error) {
             if (error instanceof Error) {
                 alert(error.message);
             }
