@@ -26,7 +26,7 @@ interface Competition {
 
 const competitionsData: Competition[] = [
   {
-    eventNumber: 123456789012345, // Add eventNumber here
+    eventNumber: 123456789012345,
     date: '2024-07-15',
     startDay: '01',
     endDay: '03',
@@ -45,7 +45,7 @@ const competitionsData: Competition[] = [
     organizer: 'Рег. федерация',
   },
   {
-    eventNumber: 2, // Add eventNumber here
+    eventNumber: 2,
     date: '2024-08-20',
     startDay: '05',
     endDay: '07',
@@ -120,12 +120,11 @@ const Page = () => {
   return (
       <div className={styles.pageWrapper}>
         <div className={styles.contentContainer}>
-          {/* Фильтры */}
           <div className={styles.filterSection}>
             <h2 className={styles.filterTitle}>Фильтры</h2>
             <div className={styles.filterGrid}>
-              {/* Вид спорта */}
-              <div>
+              {/* Первый ряд */}
+              <div className={styles.filterItem}>
                 <label className={styles.filterLabel}>Вид спорта</label>
                 <select
                     name="sport"
@@ -139,8 +138,7 @@ const Page = () => {
                 </select>
               </div>
 
-              {/* Дисциплина */}
-              <div>
+              <div className={styles.filterItem}>
                 <label className={styles.filterLabel}>Дисциплина</label>
                 <input
                     type="text"
@@ -152,8 +150,7 @@ const Page = () => {
                 />
               </div>
 
-              {/* Программа */}
-              <div>
+              <div className={styles.filterItem}>
                 <label className={styles.filterLabel}>Программа</label>
                 <input
                     type="text"
@@ -165,8 +162,7 @@ const Page = () => {
                 />
               </div>
 
-              {/* Место проведения */}
-              <div>
+              <div className={styles.filterItem}>
                 <label className={styles.filterLabel}>Место проведения</label>
                 <input
                     type="text"
@@ -178,8 +174,7 @@ const Page = () => {
                 />
               </div>
 
-              {/* Минимальное число участников */}
-              <div>
+              <div className={styles.filterItem}>
                 <label className={styles.filterLabel}>
                   Минимальное число участников
                 </label>
@@ -194,24 +189,15 @@ const Page = () => {
                 />
               </div>
 
-              {/* Пол/Возраст */}
-              <div>
-                <label className={styles.filterLabel}>Пол/Возраст</label>
-                <select
-                    name="genderAge"
-                    value={filters.genderAge}
-                    onChange={handleFilterChange}
-                    className={styles.filterInput}
-                >
-                  <option value="">Все</option>
-                  <option>Мужчины</option>
-                  <option>Женщины</option>
-                  <option>Юниоры</option>
-                </select>
+              {/* Второй ряд */}
+              <div className={styles.filterItem}>
+                <label className={styles.filterLabel}>&nbsp;</label>
+                <button onClick={toggleMapVisibility} className={styles.mapButton}>
+                  {isMapVisible ? 'Скрыть карту' : 'Показать карту'}
+                </button>
               </div>
 
-              {/* Тип соревнования */}
-              <div>
+              <div className={styles.filterItem}>
                 <label className={styles.filterLabel}>Тип соревнования</label>
                 <select
                     name="competitionType"
@@ -227,8 +213,22 @@ const Page = () => {
                 </select>
               </div>
 
-              {/* Дата от */}
-              <div>
+              <div className={styles.filterItem}>
+                <label className={styles.filterLabel}>Пол/Возраст</label>
+                <select
+                    name="genderAge"
+                    value={filters.genderAge}
+                    onChange={handleFilterChange}
+                    className={styles.filterInput}
+                >
+                  <option value="">Все</option>
+                  <option>Мужчины</option>
+                  <option>Женщины</option>
+                  <option>Юниоры</option>
+                </select>
+              </div>
+
+              <div className={styles.filterItem}>
                 <label className={styles.filterLabel}>Дата от</label>
                 <input
                     type="date"
@@ -239,8 +239,7 @@ const Page = () => {
                 />
               </div>
 
-              {/* Дата до */}
-              <div>
+              <div className={styles.filterItem}>
                 <label className={styles.filterLabel}>Дата до</label>
                 <input
                     type="date"
@@ -253,15 +252,10 @@ const Page = () => {
             </div>
           </div>
 
-          {/* Кнопка для скрытия/раскрытия карты */}
-          <button onClick={toggleMapVisibility} className={styles.toggleMapButton}>
-            {isMapVisible ? 'Скрыть карту' : 'Показать карту'}
-          </button>
-
-          {/* Карта с отфильтрованными соревнованиями */}
+          {/* Карта */}
           {isMapVisible && <YandexMap events={filteredCompetitions} />}
 
-          {/* Таблица соревнований */}
+          {/* Таблица */}
           <div className={styles.competitionTable}>
             <table>
               <thead>
@@ -277,7 +271,6 @@ const Page = () => {
               {filteredCompetitions.map((competition) => (
                   <tr key={competition.eventNumber}>
                     <td className={styles.numberCell}>{competition.eventNumber}</td>
-                    {/* Use eventNumber here */}
                     <td className={styles.dateCell}>
                       <div className={styles.dateRange}>
                         {competition.startDay} - {competition.endDay}
@@ -291,20 +284,13 @@ const Page = () => {
                       <div className={styles.categories}>
                         {competition.categories.map((category, idx) => (
                             <span key={idx} className={styles.category}>
-              {category}
-            </span>
+                          {category}
+                        </span>
                         ))}
                       </div>
                     </td>
-                    <td className={styles.venueCell}>
-                      <div className={styles.city}>{competition.city}</div>
-                      <div className={styles.organizer}>
-                        Организатор: {competition.organizer}
-                      </div>
-                    </td>
-                    <td className={styles.participantsCell}>
-                      {competition.participants}
-                    </td>
+                    <td>{competition.city}</td>
+                    <td>{competition.participants}</td>
                   </tr>
               ))}
               </tbody>
