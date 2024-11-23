@@ -12,7 +12,7 @@ class DisciplinesController{
         }
     }
 
-    async deleteDisciplines(req,res){
+    async deleteDisciplines(req){
         const id = req.params.id
         await Disciplines.destroy({where: {id}})
     }

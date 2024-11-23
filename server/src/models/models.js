@@ -20,6 +20,7 @@ const EventTypes = sequelize.define('event_types', {
 }, { timestamps: false });
 
 // Таблица событий
+// Обновленная модель событий
 const Events = sequelize.define('events', {
     id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
     title: { type: DataTypes.STRING, allowNull: false },
@@ -32,12 +33,13 @@ const Events = sequelize.define('events', {
     ageGroup: { type: DataTypes.STRING },
     startDate: { type: DataTypes.DATE, allowNull: false },
     endDate: { type: DataTypes.DATE },
-    startTime: { type: DataTypes.TIME }, // Добавлено время начала
-    endTime: { type: DataTypes.TIME },   // Добавлено время окончания
-    latitude: { type: DataTypes.FLOAT }, // Геолокация
+    startTime: { type: DataTypes.TIME },
+    endTime: { type: DataTypes.TIME },
+    latitude: { type: DataTypes.FLOAT },
     longitude: { type: DataTypes.FLOAT },
     registrationLink: { type: DataTypes.STRING },
-    status: { type: DataTypes.STRING, defaultValue: 'planned' }, // Статус: planned, ongoing, completed, canceled
+    status: { type: DataTypes.STRING, defaultValue: 'planned' }, // Статус: planned, ongoing, completed, canceled, rescheduled
+    lastUpdated: { type: DataTypes.DATE }, // Дата последнего обновления
 }, { timestamps: false });
 
 // Таблица пользователей
@@ -64,6 +66,17 @@ const UserInfo = sequelize.define('user_info', {
 const Subscriptions = sequelize.define('subscriptions', {
     id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
     subscriptionType: { type: DataTypes.STRING }, // Подписка на событие, дисциплину и т.д.
+    userId: { type: DataTypes.INTEGER }, // Идентификатор пользователя
+    eventId: { type: DataTypes.INTEGER }, // Идентификатор события
+}, { timestamps: false });
+
+const Notifications = sequelize.define('notifications', {
+    id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
+    userId: { type: DataTypes.INTEGER, allowNull: false }, // Ссылка на пользователя
+    eventId: { type: DataTypes.INTEGER, allowNull: false }, // Ссылка на событие
+    type: { type: DataTypes.STRING, defaultValue: 'new_event' }, // Тип уведомления: 'new_event' или 'update'
+    message: { type: DataTypes.STRING, allowNull: false }, // Сообщение
+    isRead: { type: DataTypes.BOOLEAN, defaultValue: false }, // Прочитано ли уведомление
 }, { timestamps: false });
 
 // Установление связей
@@ -85,6 +98,12 @@ Subscriptions.belongsTo(Events);
 User.hasOne(UserInfo, { foreignKey: 'userId', onDelete: 'CASCADE' });
 UserInfo.belongsTo(User);
 
+User.hasMany(Notifications);
+Notifications.belongsTo(User);
+
+Events.hasMany(Notifications);
+Notifications.belongsTo(Events);
+
 module.exports = {
     Sports,
     Disciplines,
@@ -93,4 +112,5 @@ module.exports = {
     User,
     UserInfo,
     Subscriptions,
+    Notifications,
 };

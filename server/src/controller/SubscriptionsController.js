@@ -12,7 +12,7 @@ class SubscriptionsController{
         }
     }
 
-    async deleteSubscriptions(req,res){
+    async deleteSubscriptions(req){
         const id = req.params.id
         await Subscriptions.destroy({where: {id}})
     }

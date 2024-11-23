@@ -53,6 +53,17 @@ class UserController {
 
         return res.json({token})
     }
+
+    async getAllUserEmails(req, res, next) {
+        try {
+            const users = await User.findAll({ attributes: ['email'] }); // Получаем только email
+
+            const emails = users.map(user => user.email); // Преобразуем результат в массив email-ов
+            return res.json(emails); // Возвращаем массив email-ов
+        } catch (error) {
+            next(ApiError.badRequest(error.message));
+        }
+    }
 }
 
 module.exports = new UserController()

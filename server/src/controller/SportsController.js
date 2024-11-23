@@ -12,7 +12,7 @@ class SportsController{
         }
     }
 
-    async deleteSports(req,res){
+    async deleteSports(req){
         const id = req.params.id
         await Sports.destroy({where: {id}})
     }

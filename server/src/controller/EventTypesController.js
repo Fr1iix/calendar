@@ -12,7 +12,7 @@ class EventTypesController{
         }
     }
 
-    async deleteEventTypes(req,res){
+    async deleteEventTypes(req){
         const id = req.params.id
         await EventTypes.destroy({where: {id}})
     }
