@@ -20,7 +20,6 @@ const AddNewsPage = () => {
     const [newTitle, setNewTitle] = useState('');
     const [newDate, setNewDate] = useState('');
     const [newImage, setNewImage] = useState('');
-    <Link href="/news" className={styles.viewNewsLink}>Перейти к новостям</Link>
 
     const handleAddNews = () => {
         const newNewsItem: NewsItem = {
@@ -42,6 +41,7 @@ const AddNewsPage = () => {
     return (
         <div className={styles.addNewsContainer}>
             <h1>Добавить новость</h1>
+            <Link href="/news" className={styles.viewNewsLink}>Перейти к новостям</Link>
             <div className={styles.formContainer}>
                 <input
                     type="text"
