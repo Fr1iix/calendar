@@ -6,7 +6,8 @@ require('./src/models/models');
 const cors = require('cors')
 const fileUpload = require('express-fileupload')
 const path = require('path')
-const pdfRoutes = require('./src/router/pdfRoutes');
+const eventRoutes = require('./src/router/EventRouter')
+
 
 
 const PORT = process.env.PORT
@@ -18,7 +19,8 @@ app.use(express.json())
 app.use(express.static(path.resolve(__dirname, 'static')))
 app.use(fileUpload({}))
 app.use('/api', router)
-app.use(pdfRoutes);
+
+app.use(eventRoutes);
 const start = async () => {
     try {
         await sequelize.authenticate()
