@@ -1,4 +1,3 @@
-/* components/Footer.module.css */
 .footer {
     background-color: #314367; /* Цвет фона футера */
     color: white; /* Цвет текста */
@@ -43,4 +42,34 @@
 
 .email:hover {
     text-decoration: underline; /* Подчеркивание при наведении */
+}
+
+/* Медиа-запросы для мобильных устройств */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column; /* Вертикальное расположение для мобильных */
+        align-items: center; /* Центрирование элементов */
+        text-align: center; /* Центрирование текста */
+    }
+
+    .logoContainer {
+        margin-bottom: 10px; /* Отступ снизу для логотипа */
+    }
+
+    .title {
+        font-size: 20px; /* Уменьшение размера шрифта для мобильных */
+    }
+
+    .centerText {
+        font-size: 16px; /* Уменьшение размера шрифта для мобильных */
+    }
+
+    .contactInfo {
+        font-size: 12px; /* Уменьшение размера шрифта для контактной информации */
+        text-align: center; /* Центрирование текста */
+    }
+
+    .contactInfo p {
+        margin: 5px 0; /* Уменьшение отступов между строками */
+    }
 }
