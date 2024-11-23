@@ -6,7 +6,7 @@
     background: #314367;
     color: #b5bab5;
     width: 100%;
-    box-shadow: 0px 4px 2px -2px gray;
+    box-shadow: 0 4px 2px -2px gray;
 }
 
 .logoContainer {
@@ -56,4 +56,17 @@
 .authButton:hover {
     background-color: white;
     color: #314367;
+}
+
+/* New styles for the user's name link */
+.userName {
+    color: white;
+    font-size: 18px;
+    margin-left: 15px; /* Add margin to space it from other elements */
+    text-decoration: none; /* Remove underline */
+    cursor: pointer; /* Ensure it's clickable */
+}
+
+.userName:hover {
+    text-decoration: underline; /* Underline on hover to indicate it's clickable */
 }

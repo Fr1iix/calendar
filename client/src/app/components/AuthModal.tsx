@@ -4,10 +4,10 @@ import styles from './AuthModal.module.css';
 interface AuthModalProps {
     isOpen: boolean;
     onClose: () => void;
+    onAuthSuccess: (name: string) => void; // New callback prop
 }
 
-
-export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
+export default function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalProps) {
     const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -16,12 +16,14 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
     const handleLogin = (e: React.FormEvent) => {
         e.preventDefault();
         console.log('Вход:', email, password);
+        onAuthSuccess(name);  // Send name to parent on successful login
         onClose();
     };
 
     const handleRegister = (e: React.FormEvent) => {
         e.preventDefault();
         console.log('Регистрация:', name, email, password);
+        onAuthSuccess(name);  // Send name to parent on successful registration
         onClose();
     };
 
@@ -50,7 +52,6 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 {activeTab === 'login' ? (
                     <form onSubmit={handleLogin} className={styles.form}>
                         <h2>Вход в аккаунт</h2>
-                        <h2></h2>
                         <input
                             type="email"
                             placeholder="Email"
@@ -74,7 +75,6 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 ) : (
                     <form onSubmit={handleRegister} className={styles.form}>
                         <h2>Регистрация</h2>
-                        <h2></h2>
                         <input
                             type="text"
                             placeholder="Имя"
