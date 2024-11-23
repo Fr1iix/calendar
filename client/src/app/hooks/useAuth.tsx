@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 
+// Хук useAuth для управления состоянием авторизации
 export function useAuth() {
     const [user, setUser] = useState<{
         token?: string;
@@ -11,7 +12,6 @@ export function useAuth() {
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            // Здесь можно добавить запрос на получение данных пользователя
             const storedUser = localStorage.getItem('user');
             if (storedUser) {
                 setUser(JSON.parse(storedUser));
@@ -21,6 +21,7 @@ export function useAuth() {
 
     const login = (userData: any) => {
         setUser(userData);
+        localStorage.setItem('token', userData.token);
         localStorage.setItem('user', JSON.stringify(userData));
     };
 

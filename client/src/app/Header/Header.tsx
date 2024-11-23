@@ -3,15 +3,17 @@ import React, { useState } from 'react';
 import Image from 'next/image';
 import AuthModal from '../components/AuthModal';
 import styles from './header.module.css';
-import Link from "next/link";
+import Link from 'next/link';
+import { useAuth } from '../hooks/useAuth';
 
 export default function Header() {
+    const { user, login, logout } = useAuth();  // Используем кастомный хук useAuth
     const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-    const [userName, setUserName] = useState<string | null>(null); // State to store the user's name
 
-    // Function to handle successful authentication (login or register)
-    const handleAuthSuccess = (name: string) => {
-        setUserName(name);
+    // Обработка успешной авторизации
+    const handleAuthSuccess = (userData: any) => {
+        login(userData);
+        setIsAuthModalOpen(false);  // Закрываем модальное окно
     };
 
     return (
@@ -29,12 +31,17 @@ export default function Header() {
                 <Link href="/user" className={styles.text}>Ближайшие соревнования</Link>
             </div>
             <div className={styles.authButtons}>
-                {userName ? (
-                    <Link href="/user" className={styles.userName}>
-                        {userName} {/* Make the username a clickable link */}
-                    </Link>
+                {user ? (
+                    <> {/* Отображаем email и кнопку "Выйти" */}
+                        <Link href="/user" className={styles.userName}>
+                            {user.email} {/* Отображаем email пользователя */}
+                        </Link>
+                        <button onClick={logout} className={styles.authButton}>
+                            Выйти
+                        </button>
+                    </>
                 ) : (
-                    <>
+                    <> {/* Кнопки для авторизации и регистрации */}
                         <button
                             className={styles.authButton}
                             onClick={() => setIsAuthModalOpen(true)}
@@ -49,10 +56,11 @@ export default function Header() {
                         </button>
                     </>
                 )}
+                {/* Модальное окно для авторизации и регистрации */}
                 <AuthModal
                     isOpen={isAuthModalOpen}
                     onClose={() => setIsAuthModalOpen(false)}
-                    onAuthSuccess={handleAuthSuccess} // Pass the callback function
+                    onAuthSuccess={handleAuthSuccess}
                 />
             </div>
         </div>
