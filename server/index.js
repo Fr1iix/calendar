@@ -6,7 +6,8 @@ require('./src/models/models');
 const cors = require('cors')
 const fileUpload = require('express-fileupload')
 const path = require('path')
-const eventRoutes = require('./src/router/EventRouter')
+const eventRouter = require('./src/router/EventRouter')
+const sportRouter = require('./src/router/SportsRouter');
 
 
 
@@ -16,11 +17,13 @@ const app = express()
 
 app.use(cors())
 app.use(express.json())
-app.use(express.static(path.resolve(__dirname, 'static')))
+app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.resolve(__dirname, 'public')))
 app.use(fileUpload({}))
 app.use('/api', router)
+app.use('/api/events', eventRouter);
+app.use('/api/sports', sportRouter);
 
-app.use(eventRoutes);
 const start = async () => {
     try {
         await sequelize.authenticate()

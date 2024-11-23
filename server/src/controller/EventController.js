@@ -48,8 +48,24 @@ class EventController {
     }
 
     async getAllEvent(req, res) {
-        const allEvents = await Event.findAll();
-        return res.json(allEvents);
+        try {
+            const events = await Event.findAll({
+                attributes: [
+                    'title',
+                    'details',
+                    'latitude',
+                    'longitude',
+                    'startDate',
+                    'endDate',
+                    'participantsCount',
+                    'city',
+                ],
+            });
+            res.json(events);
+        } catch (error) {
+            console.error('Ошибка получения событий:', error.message);
+            res.status(500).json({ error: 'Не удалось получить данные' });
+        }
     }
 
     async getOneEvent(req, res) {
