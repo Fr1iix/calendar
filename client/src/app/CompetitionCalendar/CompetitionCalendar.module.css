@@ -1,172 +1,238 @@
-.container {
-    background: linear-gradient(to bottom right, #f9fafb, #f3f4f6);
-    min-height: 100vh;
-    padding: 1rem;
+/* CompetitionCalendar.module.css */
+.pageWrapper {
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+    background-color: #f9fafb;
 }
 
-@media (min-width: 768px) {
-    .container {
-        padding: 2rem;
-    }
-}
-
-.card {
+.contentContainer {
+    width: 100%;
+    max-width: 1200px;
     background-color: #ffffff;
-    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
-    border-radius: 1rem;
-    overflow: hidden;
-    border: 1px solid #f3f4f6;
-}
-
-.title {
-    font-size: 1.875rem;
-    font-weight: 800;
-    text-align: center;
-    background: linear-gradient(to right, #2563eb, #7c3aed);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    margin-bottom: 2rem;
-    letter-spacing: -0.02em;
-}
-
-.filterSection {
-    background-color: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(10px);
-    border-radius: 0.75rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
     padding: 1.5rem;
-    margin-bottom: 1.5rem;
-    border: 1px solid rgba(229, 231, 235, 0.5);
-    box-shadow:
-            5px 5px 10px rgba(0, 0, 0, 0.1),   /* Тень справа и снизу */
-            -5px 5px 10px rgba(0, 0, 0, 0.1); /* Тень слева и снизу */
-    max-width: 80rem;
-    margin: 2.5rem auto 0 auto;
+    box-sizing: border-box;
+}
+
+/* Существующие стили фильтров */
+.filterSection {
+    margin-bottom: 2rem;
 }
 
 .filterTitle {
-    font-size: 1.25rem;
-    font-weight: 600;
     margin-bottom: 1rem;
-    color: #1f2937;
-    border-bottom: 1px solid #e5e7eb;
-    padding-bottom: 0.5rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #374151;
 }
 
 .filterGrid {
     display: grid;
-    grid-template-columns: repeat(1, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 1rem;
 }
 
-@media (min-width: 640px) {
-    .filterGrid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-}
-
-@media (min-width: 768px) {
-    .filterGrid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-}
-
-@media (min-width: 1024px) {
-    .filterGrid {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-}
-
-.filterLabel {
-    display: block;
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: #4b5563;
-    margin-bottom: 0.25rem;
-    letter-spacing: -0.01em;
-}
-
 .filterInput {
-    display: block;
     width: 100%;
-    border-radius: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
     border: 1px solid #d1d5db;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-    padding: 0.5rem;
-    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    border-radius: 0.375rem;
+    background-color: #fff;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+    height: 38px;
 }
 
 .filterInput:focus {
     border-color: #3b82f6;
-    box-shadow: 0px 0px 0px 3px rgba(59, 130, 246, 0.5);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    outline: none;
 }
 
-.tableContainer {
+.filterInput::placeholder {
+    color: #9ca3af;
+}
+
+.filterLabel {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+    margin-bottom: 0.5rem;
+    display: block;
+    min-height: 1.25rem;
+}
+
+/* Новые стили для таблицы */
+.competitionTable {
+    width: 100%;
+    margin-top: 2rem; /* Отступ сверху */
+    margin-bottom: 2rem;
     overflow-x: auto;
-    background-color: #ffffff;
-    border-radius: 0.75rem;
-    border: 1px solid #e5e7eb;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
 }
-
-.table {
+.competitionTable table {
     width: 100%;
     border-collapse: collapse;
+    border: 1px solid #e5e7eb;
 }
 
-.tableHead {
-    background: linear-gradient(to right, #dbeafe, #ede9fe);
-    color: #1f2937;
-    text-transform: uppercase;
-    font-size: 0.75rem;
-    letter-spacing: 0.05em;
-}
-
-.tableHeadCell {
-    padding: 1rem;
+.competitionTable th {
+    background-color: #f9fafb;
+    padding: 0.75rem 1rem;
     text-align: left;
-    font-weight: 600;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
     border-bottom: 1px solid #e5e7eb;
 }
 
-.tableRow {
-    transition: background-color 0.15s ease-in-out;
-}
-
-.tableRow:hover {
-    background-color: rgba(59, 130, 246, 0.05);
-}
-
-.tableCell {
+.competitionTable td {
     padding: 1rem;
-    border-bottom: 1px solid #f3f4f6;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.dateCell {
+    width: 120px;
+}
+
+.dateRange {
     font-size: 0.875rem;
-    color: #4b5563;
+    font-weight: 500;
+    color: #111827;
 }
 
-.emptyState {
-    text-align: center;
+.weekDays {
+    font-size: 0.75rem;
     color: #6b7280;
-    font-style: italic;
-    padding: 1rem;
+    margin-top: 0.25rem;
 }
 
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(10px);
+.titleCell {
+    min-width: 300px;
+}
+
+.competitionTitle {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #111827;
+    margin-bottom: 0.5rem;
+}
+
+.categories {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.category {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    border-radius: 0.25rem;
+    background-color: #e5e7eb;
+    color: #374151;
+}
+
+.category:nth-child(1) {
+    background-color: #dbeafe;
+    color: #1e40af;
+}
+
+.category:nth-child(2) {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+.category:nth-child(3) {
+    background-color: #f3e8ff;
+    color: #6b21a8;
+}
+
+.venueCell {
+    text-align: right;
+    min-width: 200px;
+}
+
+.city {
+    font-size: 0.875rem;
+    color: #111827;
+}
+
+.organizer {
+    font-size: 0.75rem;
+    color: #6b7280;
+    margin-top: 0.25rem;
+}
+
+/* Новый столбец для номера события */
+.eventNumberCell {
+    text-align: center;
+    width: 80px;
+    font-weight: bold;
+    color: #314367;
+}
+
+/* Новый стиль для Места проведения */
+.venueCell {
+    text-align: left; /* Это заставит текст выравниваться по левому краю */
+    min-width: 200px;
+}
+
+.venueCell div {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.toggleMapButton {
+    background-color: #314367;
+    color: #ffffff;
+    border: none;
+    border-radius: 0.375rem;
+    padding: 0.75rem 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s, box-shadow 0.2s;
+    margin-bottom: 1rem;
+}
+
+.toggleMapButton:hover {
+    background-color: #314367;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* Новый столбец для количества участников */
+.participantsCell {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #111827;
+    text-align: center;
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    .competitionTable {
+        font-size: 0.875rem;
     }
-    to {
-        opacity: 1;
-        transform: translateY(0);
+
+    .dateCell {
+        width: auto;
     }
-}
 
-.fadeInAnimation {
-    animation: fadeIn 0.5s ease-out;
-}
+    .titleCell {
+        min-width: 200px;
+    }
 
-@media (max-width: 640px) {
-    .filterGrid {
-        grid-template-columns: repeat(1, minmax(0, 1fr));
+    .venueCell {
+        min-width: 150px;
+    }
+
+    .participantsCell {
+        font-size: 0.75rem;
     }
 }
