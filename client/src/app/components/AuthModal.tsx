@@ -9,7 +9,7 @@ interface AuthModalProps {
 }
 
 export default function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalProps) {
-    const { login } = useAuth(); // Используем кастомный хук useAuth
+    const { login } = useAuth();
     const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
 
     const [registrationData, setRegistrationData] = useState({
@@ -27,6 +27,8 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalP
         email: '',
         password: ''
     });
+
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
     const handleLoginChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -46,6 +48,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalP
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
+        setErrorMessage(null); // Очистка ошибок перед началом
         try {
             const response = await fetch('/api/auth/login', {
                 method: 'POST',
@@ -54,30 +57,29 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalP
                 },
                 body: JSON.stringify(loginData),
             });
+
             const data = await response.json();
 
             if (!response.ok) {
                 throw new Error(data.message || 'Ошибка входа');
             }
 
-            // Сохраняем токен в localStorage
-            localStorage.setItem('token', data.token);
-            login(data.user); // Обновляем состояние пользователя
-
-            onAuthSuccess(data.user); // Передаём данные пользователя дальше
+            login(data.user);
+            onAuthSuccess(data.user);
             onClose();
         } catch (error: unknown) {
             if (error instanceof Error) {
-                alert(error.message);
+                setErrorMessage(error.message); // Сохраняем сообщение об ошибке
             }
         }
     };
 
     const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
+        setErrorMessage(null); // Очистка ошибок перед началом
 
         if (registrationData.password !== registrationData.confirmPassword) {
-            alert('Пароли не совпадают');
+            setErrorMessage('Пароли не совпадают');
             return;
         }
 
@@ -104,16 +106,9 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalP
                 throw new Error(data.message || 'Ошибка регистрации');
             }
 
-            console.log(data); // Для отладки
-
             if (data.token) {
-                // Сохранение токена и данных пользователя
                 const userData = { token: data.token, email: registrationData.email, ...data.user };
-                localStorage.setItem('token', data.token);
-                localStorage.setItem('user', JSON.stringify(userData));
                 login(userData);
-
-                // Закрытие модального окна
                 onAuthSuccess(userData);
                 onClose();
             } else {
@@ -121,7 +116,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalP
             }
         } catch (error) {
             if (error instanceof Error) {
-                alert(error.message);
+                setErrorMessage(error.message); // Сохраняем сообщение об ошибке
             }
         }
     };
@@ -147,6 +142,8 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalP
                         Регистрация
                     </button>
                 </div>
+
+                {errorMessage && <div className={styles.error}>{errorMessage}</div>}
 
                 {activeTab === 'login' ? (
                     <form onSubmit={handleLogin} className={styles.form}>
