@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './AuthModal.module.css';
 import { useAuth } from '../hooks/useAuth';
 
@@ -6,11 +6,12 @@ interface AuthModalProps {
     isOpen: boolean;
     onClose: () => void;
     onAuthSuccess: (userData: any) => void;
+    initialTab?: 'login' | 'register';
 }
 
-export default function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalProps) {
-    const { login } = useAuth(); // Используем кастомный хук useAuth
-    const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
+export default function AuthModal({ isOpen, onClose, onAuthSuccess, initialTab = 'login' }: AuthModalProps) {
+    const { login } = useAuth();
+    const [activeTab, setActiveTab] = useState<'login' | 'register'>(initialTab);
 
     const [registrationData, setRegistrationData] = useState({
         email: '',
@@ -27,6 +28,12 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalP
         email: '',
         password: ''
     });
+
+    useEffect(() => {
+        if (isOpen) {
+            setActiveTab(initialTab);
+        }
+    }, [isOpen, initialTab]);
 
     const handleLoginChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -60,11 +67,10 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalP
                 throw new Error(data.message || 'Ошибка входа');
             }
 
-            // Сохраняем токен в localStorage
             localStorage.setItem('token', data.token);
-            login(data.user); // Обновляем состояние пользователя
+            login(data.user);
 
-            onAuthSuccess(data.user); // Передаём данные пользователя дальше
+            onAuthSuccess(data.user);
             onClose();
         } catch (error: unknown) {
             if (error instanceof Error) {
@@ -104,16 +110,12 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess }: AuthModalP
                 throw new Error(data.message || 'Ошибка регистрации');
             }
 
-            console.log(data); // Для отладки
-
             if (data.token) {
-                // Сохранение токена и данных пользователя
                 const userData = { token: data.token, email: registrationData.email, ...data.user };
                 localStorage.setItem('token', data.token);
                 localStorage.setItem('user', JSON.stringify(userData));
                 login(userData);
 
-                // Закрытие модального окна
                 onAuthSuccess(userData);
                 onClose();
             } else {
