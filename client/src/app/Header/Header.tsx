@@ -5,22 +5,34 @@ import AuthModal from '../components/AuthModal';
 import styles from './header.module.css';
 import Link from 'next/link';
 import { useAuth } from '../hooks/useAuth';
-import { FaBars, FaTimes } from 'react-icons/fa'; // Используем иконки из react-icons
+import { FaBars, FaTimes } from 'react-icons/fa';
 
 export default function Header() {
-    const { user, login, logout } = useAuth();  // Используем кастомный хук useAuth
+    const { user, login, logout } = useAuth();
     const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-    const [isMenuOpen, setIsMenuOpen] = useState(false); // Состояние для меню
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [authModalTab, setAuthModalTab] = useState<'login' | 'register'>('login');
 
-    // Обработка успешной авторизации
     const handleAuthSuccess = (userData: any) => {
         login(userData);
-        setIsAuthModalOpen(false);  // Закрываем модальное окно
+        setIsAuthModalOpen(false);
     };
 
-    // Закрыть меню при клике на ссылку
     const handleLinkClick = () => {
         setIsMenuOpen(false);
+    };
+
+    // Новая функция для закрытия модального окна
+    const handleCloseModal = () => {
+        setIsAuthModalOpen(false);
+        // Сбрасываем значение вкладки при закрытии
+        setAuthModalTab('login');
+    };
+
+    // Новая функция для открытия модального окна
+    const handleOpenModal = (tab: 'login' | 'register') => {
+        setAuthModalTab(tab);
+        setIsAuthModalOpen(true);
     };
 
     return (
@@ -40,31 +52,30 @@ export default function Header() {
                 </nav>
                 <div className={styles.authButtons}>
                     {user ? (
-                        <> {/* Отображаем email и кнопку "Выйти" */}
+                        <>
                             <Link href="/user" className={styles.userName}>
-                                {user.email} {/* Отображаем email пользователя */}
+                                {user.email}
                             </Link>
                             <button onClick={logout} className={styles.authButton}>
                                 Выйти
                             </button>
                         </>
                     ) : (
-                        <> {/* Кнопки для авторизации и регистрации */}
+                        <>
                             <button
                                 className={styles.authButton}
-                                onClick={() => setIsAuthModalOpen(true)}
+                                onClick={() => handleOpenModal('login')}
                             >
                                 Войти
                             </button>
                             <button
                                 className={styles.authButton}
-                                onClick={() => setIsAuthModalOpen(true)}
+                                onClick={() => handleOpenModal('register')}
                             >
                                 Зарегистрироваться
                             </button>
                         </>
                     )}
-                    {/* Кнопка-бургер */}
                     <button
                         className={styles.burger}
                         onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -73,21 +84,20 @@ export default function Header() {
                         {isMenuOpen ? <FaTimes /> : <FaBars />}
                     </button>
                 </div>
-                {/* Модальное окно для авторизации и регистрации */}
                 <AuthModal
                     isOpen={isAuthModalOpen}
-                    onClose={() => setIsAuthModalOpen(false)}
+                    onClose={handleCloseModal}
                     onAuthSuccess={handleAuthSuccess}
+                    initialTab={authModalTab}
                 />
             </header>
 
-            {/* Выдвижное меню */}
             <div className={`${styles.mobileMenu} ${isMenuOpen ? styles.open : ''}`}>
                 <nav className={styles.mobileNav}>
                     <Link href="/" className={styles.mobileLink} onClick={handleLinkClick}>Главная</Link>
                     <Link href="/news" className={styles.mobileLink} onClick={handleLinkClick}>Новости</Link>
                     <Link href="/CompetitionCalendar" className={styles.mobileLink} onClick={handleLinkClick}>Соревнования</Link>
-                    <Link href="/user" className={styles.mobileLink} onClick={handleLinkClick}>Ближайшие соревнования</Link>
+                    <Link href="/" className={styles.mobileLink} onClick={handleLinkClick}>Ближайшие соревнования</Link>
                     {user ? (
                         <>
                             <span className={styles.mobileUserEmail}>{user.email}</span>
@@ -99,13 +109,19 @@ export default function Header() {
                         <>
                             <button
                                 className={styles.mobileAuthButton}
-                                onClick={() => { setIsAuthModalOpen(true); handleLinkClick(); }}
+                                onClick={() => {
+                                    handleOpenModal('login');
+                                    handleLinkClick();
+                                }}
                             >
                                 Войти
                             </button>
                             <button
                                 className={styles.mobileAuthButton}
-                                onClick={() => { setIsAuthModalOpen(true); handleLinkClick(); }}
+                                onClick={() => {
+                                    handleOpenModal('register');
+                                    handleLinkClick();
+                                }}
                             >
                                 Зарегистрироваться
                             </button>
