@@ -21,7 +21,7 @@ const EventTypes = sequelize.define('event_types', {
 
 // Таблица событий
 const Event = sequelize.define('events', {
-    id: { type: DataTypes.STRING, primaryKey: true, autoIncrement: true },
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     competitionName: { type: DataTypes.STRING },
     gender: { type: DataTypes.STRING },
     age: { type: DataTypes.STRING },
@@ -29,6 +29,9 @@ const Event = sequelize.define('events', {
     region: { type: DataTypes.STRING },
     town: { type: DataTypes.STRING },
     participantsCount: { type: DataTypes.INTEGER },
+    sport: { type: DataTypes.STRING },
+    disciplineId: { type: DataTypes.INTEGER },
+    eventTypeId: { type: DataTypes.INTEGER },
 }, { timestamps: false });
 
 // Таблица пользователей
