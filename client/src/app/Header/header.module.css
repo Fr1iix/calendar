@@ -7,6 +7,8 @@
     color: #b5bab5;
     width: 100%;
     box-shadow: 0 4px 2px -2px gray;
+    position: relative;
+    z-index: 1000;
 }
 
 .logoContainer {
@@ -34,12 +36,20 @@
     margin: 0 15px;
     color: white;
     cursor: pointer;
+    text-decoration: none;
+    transition: color 0.3s ease, transform 0.3s ease; /* Плавные переходы */
+}
+
+.text:hover {
+    color: #ffdd57; /* Цвет при наведении */
+    transform: scale(1.05); /* Лёгкое увеличение при наведении */
 }
 
 .authButtons {
     display: flex;
     font-size: 18px;
     align-items: center;
+    position: relative;
 }
 
 .authButton {
@@ -50,23 +60,135 @@
     padding: 5px 10px;
     cursor: pointer;
     border-radius: 5px;
-    transition: background-color 0.3s, color 0.3s;
+    transition: background-color 0.3s, color 0.3s, transform 0.3s ease; /* Плавные переходы */
 }
 
 .authButton:hover {
     background-color: white;
     color: #314367;
+    transform: scale(1.05); /* Лёгкое увеличение при наведении */
 }
 
-/* New styles for the user's name link */
 .userName {
     color: white;
     font-size: 18px;
-    margin-left: 15px; /* Add margin to space it from other elements */
-    text-decoration: none; /* Remove underline */
-    cursor: pointer; /* Ensure it's clickable */
+    margin-left: 15px; /* Отступ для отделения от других элементов */
+    text-decoration: none; /* Убираем подчеркивание */
+    cursor: pointer; /* Кликабельность */
+    transition: color 0.3s ease, transform 0.3s ease; /* Плавные переходы */
 }
 
 .userName:hover {
-    text-decoration: underline; /* Underline on hover to indicate it's clickable */
+    color: #ffdd57; /* Цвет при наведении */
+    transform: scale(1.05); /* Лёгкое увеличение при наведении */
+}
+
+/* Стили для кнопки-бургера */
+.burger {
+    display: none; /* Скрыта на больших экранах */
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    margin-left: 15px;
+    z-index: 1001; /* Поверх других элементов */
+    transition: transform 0.3s ease; /* Анимация вращения */
+}
+
+.burger:hover {
+    transform: rotate(90deg); /* Вращение при наведении */
+}
+
+/* Мобильное меню */
+.mobileMenu {
+    position: fixed;
+    top: 0;
+    right: -100%;
+    width: 80%; /* Изменено на 80% ширины экрана для лучшей адаптивности */
+    max-width: 300px; /* Максимальная ширина */
+    height: 100%;
+    background-color: #314367;
+    color: white;
+    transition: right 0.3s ease-in-out;
+    box-shadow: -2px 0 5px rgba(0,0,0,0.5);
+    z-index: 999;
+    overflow-y: auto; /* Добавляем прокрутку при переполнении */
+}
+
+.mobileMenu.open {
+    right: 0;
+}
+
+.mobileNav {
+    display: flex;
+    flex-direction: column;
+    padding: 2rem 1rem;
+}
+
+.mobileLink {
+    margin: 1rem 0;
+    font-size: 18px;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.3s ease, transform 0.3s ease; /* Плавные переходы */
+}
+
+.mobileLink:hover {
+    color: #ffdd57; /* Цвет при наведении */
+    transform: scale(1.05); /* Лёгкое увеличение при наведении */
+}
+
+.mobileAuthButton {
+    background: none;
+    border: 2px solid white;
+    color: white;
+    margin: 10px 0;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: background-color 0.3s, color 0.3s, transform 0.3s ease; /* Плавные переходы */
+}
+
+.mobileAuthButton:hover {
+    background-color: white;
+    color: #314367;
+    transform: scale(1.05); /* Лёгкое увеличение при наведении */
+}
+
+.mobileUserEmail {
+    margin: 1rem 0;
+    font-size: 18px;
+    text-align: center;
+    word-wrap: break-word; /* Для старых браузеров */
+    overflow-wrap: anywhere; /* Для современных браузеров */
+    max-width: 100%;
+    padding: 0 1rem; /* Отступы слева и справа */
+    box-sizing: border-box;
+    white-space: normal; /* Разрешаем перенос строк */
+    word-break: break-word; /* Перенос длинных слов */
+    transition: color 0.3s ease, transform 0.3s ease; /* Плавные переходы */
+}
+
+.mobileUserEmail:hover {
+    color: #ffdd57; /* Цвет при наведении */
+    transform: scale(1.05); /* Лёгкое увеличение при наведении */
+}
+
+/* Медиа-запросы для адаптивности */
+@media (max-width: 1200px) {
+    .buttonContainer {
+        display: none; /* Скрываем навигационные ссылки на малых экранах */
+    }
+
+    /* Скрываем все элементы внутри authButtons кроме кнопки-бургера */
+    .authButtons > *:not(.burger) {
+        display: none;
+    }
+
+    .burger {
+        display: block; /* Показываем кнопку-бургер */
+    }
 }
