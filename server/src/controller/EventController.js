@@ -1,67 +1,92 @@
 const ApiError = require('../error/ApiError');
-const { Event, User, Subscriptions } = require('../models/models');
-const sendEmail = require('../utils/sendEmail');  // Импортируем функцию для отправки email
+const {Event, pdfParseResult, Subscriptions, User} = require('../models/models');
+const sendEmail = require('../utils/sendEmail'); // Импортируем функцию для отправки email
 const cron = require('node-cron');
-const {Op} = require("sequelize"); // Для реализации cron задач (например, для напоминаний)
+const {Op} = require('sequelize'); // Для реализации cron задач (например, для напоминаний)
+
+// Функция для парсинга данных из текста
+function parseEventData(text) {
+    return {
+        id: text.match(/\b\d{16}\b/)?.[0] || null,
+        competitionName: text.match(/^\D+/m)?.[0]?.trim() || null,
+        gender: text.match(/девочки|мальчики|девушки|юниоры|юниорки|мужчины|женщины/gi)?.join(', ') || null,
+        age: text.match(/(\d{2}-\d{2} лет)/g)?.join(', ') || null,
+        startDate: text.match(/\b\d{2}\.\d{2}\.\d{4}\b/)?.[0]?.split(' ')[0] || null,
+        endDate: text.match(/\b\d{2}\.\d{2}\.\d{4}\b.*?$/)?.[0]?.split(' ')[1] || null,
+        country: text.match(/РОССИЯ/i)?.[0] || null,
+        region: text.match(/[А-ЯЁ\-]+ ОБЛАСТЬ|РЕСПУБЛИКА [А-ЯЁ\-]+/i)?.[0] || null,
+        town: text.match(/г\. [^,]+|[а-яё]+ деревня|[а-яё]+ село/i)?.[0] || null,
+        participantsCount: parseInt(text.match(/\b\d{3,}\b/)?.[0], 10) || null,
+        registrationLink: null
+    };
+}
 
 class EventController {
-    // Создание нового события
-    async create(req, res, next) {
+    // Метод для обработки текста и записи данных в таблицу events
+    async processPdfData(req, res) {
         try {
-            const {
-                title, details, city, region, venue,
-                participantsCount, gender, ageGroup,
-                startDate, endDate, startTime, endTime,
-                latitude, longitude, registrationLink,
-                lastNotified, status
-            } = req.body;
+            // 1. Извлекаем текст из таблицы pdfParseResult
+            const pdfData = await pdfParseResult.findAll();
+            if (!pdfData.length) {
+                return res.status(404).json({message: 'Нет данных для обработки.'});
+            }
 
-            const event = await Event.create({
-                title, details, city, region, venue,
-                participantsCount, gender, ageGroup,
-                startDate, endDate, startTime, endTime,
-                latitude, longitude, registrationLink,
-                lastNotified, status
+            let processedCount = 0;
+
+            // 2. Обрабатываем каждую запись текста
+            for (const entry of pdfData) {
+                const rawText = entry.text;
+
+                // Разделяем текст на записи (каждая начинается с ID)
+                const entries = rawText.split(/\n(?=\d{16})/); // Каждая запись начинается с ID
+
+                for (const record of entries) {
+                    const eventData = parseEventData(record);
+
+                    // 3. Проверяем данные и записываем их в таблицу events
+                    if (eventData.id && eventData.competitionName) {
+                        await Event.upsert({
+                            id: eventData.id,
+                            competitionName: eventData.competitionName,
+                            gender: eventData.gender,
+                            age: eventData.age,
+                            startDate: eventData.startDate,
+                            endDate: eventData.endDate,
+                            country: eventData.country,
+                            region: eventData.region,
+                            town: eventData.town,
+                            participantsCount: eventData.participantsCount,
+                            registrationLink: eventData.registrationLink,
+                        });
+                        processedCount++;
+                    }
+                }
+            }
+
+            return res.status(200).json({message: `Обработано ${processedCount} записей.`});
+        } catch (error) {
+            console.error('Ошибка при обработке данных:', error); // Добавляем логирование ошибки
+            return res.status(500).json({
+                message: 'Ошибка сервера',
+                error: error.message || error, // Отправляем сообщение об ошибке
             });
-
-            // Отправляем уведомление всем пользователям
-            await this.sendNotificationToAllUsers(event);
-
-            return res.json(event);
-        } catch (e) {
-            next(ApiError.badRequest(e.message));
         }
     }
 
-    // Создание событий из PDF
-    async createFromPdf(req, res, next) {
-        try {
-            const { events } = req.body;
-            if (!Array.isArray(events)) {
-                return next(ApiError.badRequest('Invalid input: Expected an array of events'));
-            }
-
-            const createdEvents = await Event.bulkCreate(events);
-
-            // Отправляем уведомления всем пользователям о новых событиях
-            for (let event of createdEvents) {
-                await this.sendNotificationToAllUsers(event);
-            }
-
-            return res.json({
-                message: 'Events created successfully',
-                createdEvents,
-            });
-        } catch (e) {
-            next(ApiError.badRequest(e.message));
+    async create(req,res,next){
+        try{
+            let{id,competitionName,gender,age,startDate,endDate,country,region,town,participantsCount,registrationLink} = req.body
+            const event = await Event.create({id,competitionName,gender,age,startDate,endDate,country,region,town,participantsCount,registrationLink});
+            return res.json(event)
+        }catch (e) {
+            next(ApiError.badRequest(e.message))
         }
     }
 
-    // Удаление события
     async deleteEvent(req, res) {
         const id = req.params.id;
-        await Event.destroy({ where: { id } });
-        res.json({ message: `Event with id ${id} deleted` });
+        await Event.destroy({where: {id}});
+        res.json({message: `Event with id ${id} deleted`});
     }
 
     // Получение всех событий
@@ -76,7 +101,7 @@ class EventController {
             res.json(events);
         } catch (error) {
             console.error('Ошибка получения событий:', error.message);
-            res.status(500).json({ error: 'Не удалось получить данные' });
+            res.status(500).json({error: 'Не удалось получить данные'});
         }
     }
 
@@ -90,7 +115,7 @@ class EventController {
     // Метод для отправки уведомлений всем пользователям
     async sendNotificationToAllUsers(event) {
         try {
-            const users = await User.findAll({ attributes: ['email'] });
+            const users = await User.findAll({attributes: ['email']});
             const emails = users.map(user => user.email);
 
             // Тема и текст уведомления
@@ -114,8 +139,8 @@ class EventController {
         try {
             // Получаем пользователей, подписанных на это событие
             const subscribers = await Subscriptions.findAll({
-                where: { eventId: event.id },
-                include: [{ model: User, attributes: ['email'] }]
+                where: {eventId: event.id},
+                include: [{model: User, attributes: ['email']}]
             });
 
             const emails = subscribers.map(sub => sub.User.email);
@@ -138,7 +163,7 @@ class EventController {
 
     // Метод для обновления события (перенос, изменение)
     async updateEvent(req, res, next) {
-        const { id } = req.params;
+        const {id} = req.params;
         const updatedEventData = req.body;
 
         try {
@@ -162,7 +187,7 @@ class EventController {
 
     // Метод для отмены события
     async cancelEvent(req, res, next) {
-        const { id } = req.params;
+        const {id} = req.params;
 
         try {
             const event = await Event.findByPk(id);
@@ -176,7 +201,7 @@ class EventController {
             // Отправляем уведомление об отмене события
             await this.sendNotificationAboutChange(event);
 
-            return res.json({ message: `Event with id ${id} has been canceled` });
+            return res.json({message: `Event with id ${id} has been canceled`});
         } catch (e) {
             next(ApiError.badRequest(e.message));
         }
@@ -195,8 +220,8 @@ class EventController {
 
         for (let event of events) {
             const subscribers = await Subscriptions.findAll({
-                where: { eventId: event.id },
-                include: [{ model: User, attributes: ['email'] }]
+                where: {eventId: event.id},
+                include: [{model: User, attributes: ['email']}]
             });
 
             const emails = subscribers.map(sub => sub.User.email);
