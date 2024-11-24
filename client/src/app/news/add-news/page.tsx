@@ -1,7 +1,8 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import styles from './page.module.css';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation'; // Для редиректа
 
 type NewsItem = {
     id: number;
@@ -10,16 +11,26 @@ type NewsItem = {
     image: string;
 };
 
-// Функция для сохранения новостей в localStorage
-const saveNewsToLocalStorage = (news: NewsItem[]) => {
-    localStorage.setItem('news', JSON.stringify(news));
-};
-
 const AddNewsPage = () => {
-    const [news, setNews] = useState<NewsItem[]>(JSON.parse(localStorage.getItem('news') || '[]'));
+    const [news, setNews] = useState<NewsItem[]>([]);
     const [newTitle, setNewTitle] = useState('');
     const [newDate, setNewDate] = useState('');
     const [newImage, setNewImage] = useState('');
+    const router = useRouter(); // Хук для редиректа
+
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        if (user.role !== 'admin') {
+            // Если роль не admin, перенаправляем на главную
+            router.push('/');
+        }
+
+        // Загрузка новостей из localStorage
+        const storedNews = localStorage.getItem('news');
+        if (storedNews) {
+            setNews(JSON.parse(storedNews));
+        }
+    }, [router]); // Хук с зависимостью на router, чтобы редирект произошел при монтировании
 
     const handleAddNews = () => {
         const newNewsItem: NewsItem = {
@@ -31,7 +42,7 @@ const AddNewsPage = () => {
 
         const updatedNews = [...news, newNewsItem];
         setNews(updatedNews);
-        saveNewsToLocalStorage(updatedNews);
+        localStorage.setItem('news', JSON.stringify(updatedNews));
 
         setNewTitle('');
         setNewDate('');
