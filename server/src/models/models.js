@@ -20,26 +20,15 @@ const EventTypes = sequelize.define('event_types', {
 }, { timestamps: false });
 
 // Таблица событий
-// Обновленная модель событий
-const Events = sequelize.define('events', {
-    id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
-    title: { type: DataTypes.STRING, allowNull: false },
-    details: { type: DataTypes.TEXT },
-    city: { type: DataTypes.STRING },
-    region: { type: DataTypes.STRING },
-    venue: { type: DataTypes.STRING }, // Название арены/места проведения
-    participantsCount: { type: DataTypes.INTEGER },
+const Event = sequelize.define('events', {
+    id: { type: DataTypes.STRING, primaryKey: true, autoIncrement: true },
+    competitionName: { type: DataTypes.STRING },
     gender: { type: DataTypes.STRING },
-    ageGroup: { type: DataTypes.STRING },
-    startDate: { type: DataTypes.DATE, allowNull: false },
-    endDate: { type: DataTypes.DATE },
-    startTime: { type: DataTypes.TIME },
-    endTime: { type: DataTypes.TIME },
-    latitude: { type: DataTypes.FLOAT },
-    longitude: { type: DataTypes.FLOAT },
-    registrationLink: { type: DataTypes.STRING },
-    status: { type: DataTypes.STRING, defaultValue: 'planned' }, // Статус: planned, ongoing, completed, canceled, rescheduled
-    lastUpdated: { type: DataTypes.DATE }, // Дата последнего обновления
+    age: { type: DataTypes.STRING },
+    country: { type: DataTypes.STRING },
+    region: { type: DataTypes.STRING },
+    town: { type: DataTypes.STRING },
+    participantsCount: { type: DataTypes.INTEGER },
 }, { timestamps: false });
 
 // Таблица пользователей
@@ -66,51 +55,38 @@ const UserInfo = sequelize.define('user_info', {
 const Subscriptions = sequelize.define('subscriptions', {
     id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
     subscriptionType: { type: DataTypes.STRING }, // Подписка на событие, дисциплину и т.д.
-    userId: { type: DataTypes.INTEGER }, // Идентификатор пользователя
-    eventId: { type: DataTypes.INTEGER }, // Идентификатор события
 }, { timestamps: false });
 
-const Notifications = sequelize.define('notifications', {
-    id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
-    userId: { type: DataTypes.INTEGER, allowNull: false }, // Ссылка на пользователя
-    eventId: { type: DataTypes.INTEGER, allowNull: false }, // Ссылка на событие
-    type: { type: DataTypes.STRING, defaultValue: 'new_event' }, // Тип уведомления: 'new_event' или 'update'
-    message: { type: DataTypes.STRING, allowNull: false }, // Сообщение
-    isRead: { type: DataTypes.BOOLEAN, defaultValue: false }, // Прочитано ли уведомление
-}, { timestamps: false });
+const pdfParseResult = sequelize.define('pdfParseResult', {
+    text: { type: DataTypes.TEXT },
+});
 
 // Установление связей
 Sports.hasMany(Disciplines);
 Disciplines.belongsTo(Sports);
 
-Disciplines.hasMany(Events);
-Events.belongsTo(Disciplines);
+Disciplines.hasMany(Event);
+Event.belongsTo(Disciplines);
 
-EventTypes.hasMany(Events);
-Events.belongsTo(EventTypes);
+EventTypes.hasMany(Event);
+Event.belongsTo(EventTypes);
 
 User.hasMany(Subscriptions);
 Subscriptions.belongsTo(User);
 
-Events.hasMany(Subscriptions);
-Subscriptions.belongsTo(Events);
+Event.hasMany(Subscriptions);
+Subscriptions.belongsTo(Event);
 
 User.hasOne(UserInfo, { foreignKey: 'userId', onDelete: 'CASCADE' });
 UserInfo.belongsTo(User);
-
-User.hasMany(Notifications);
-Notifications.belongsTo(User);
-
-Events.hasMany(Notifications);
-Notifications.belongsTo(Events);
 
 module.exports = {
     Sports,
     Disciplines,
     EventTypes,
-    Events,
+    Event,
     User,
     UserInfo,
     Subscriptions,
-    Notifications,
+    pdfParseResult,
 };

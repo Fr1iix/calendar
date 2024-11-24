@@ -6,8 +6,6 @@ require('./src/models/models');
 const cors = require('cors')
 const fileUpload = require('express-fileupload')
 const path = require('path')
-const eventRouter = require('./src/router/EventRouter')
-const sportRouter = require('./src/router/SportsRouter');
 
 const PORT = process.env.PORT
 const app = express()
@@ -29,14 +27,12 @@ app.use(fileUpload({}))
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).json({
-        message: 'Что-то пошло не так',
+        message: 'Ошибка сервера',
         error: process.env.NODE_ENV === 'development' ? err.message : {}
     });
 });
 
 app.use('/api', router)
-app.use('/api/events', eventRouter);
-app.use('/api/sports', sportRouter);
 
 const start = async () => {
     try {
