@@ -38,38 +38,65 @@ const UsersTable = () => {
     };
 
     return (
-        <TableContainer component={Paper} style={{ maxWidth: '800px', margin: 'auto', marginTop: '20px' }}>
+        <TableContainer component={Paper} style={{ maxWidth: '100%', margin: 'auto', marginTop: '20px' }}>
             <Box sx={{ overflowX: 'auto' }}>
                 <Table sx={{ minWidth: 650 }} aria-label="users table">
                     <TableHead>
                         <TableRow>
-                            <TableCell>
+                            <TableCell sx={{ width: '10%' }}>
                                 <Badge fontSize="small" style={{ marginRight: 8 }}/> Айди
                             </TableCell>
-                            <TableCell>
+                            <TableCell sx={{ width: '30%' }}>
                                 <AccountCircle fontSize="small" style={{ marginRight: 8 }}/> ФИО
                             </TableCell>
-                            <TableCell>
+                            <TableCell sx={{ width: '30%' }}>
                                 <MailOutline fontSize="small" style={{ marginRight: 8 }}/> Почта
                             </TableCell>
-                            <TableCell>
+                            <TableCell sx={{ width: '30%' }}>
                                 <SupervisedUserCircle fontSize="small" style={{ marginRight: 8 }}/> Роль
                             </TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {users.map((user) => (
-                            <TableRow key={user.id}>
+                            <TableRow
+                                key={user.id}
+                                sx={{
+                                    height: 64,
+                                    '& > *': { verticalAlign: 'middle' },
+                                }}
+                            >
                                 <TableCell>{user.id}</TableCell>
                                 <TableCell>{user.name}</TableCell>
                                 <TableCell>{user.email}</TableCell>
                                 <TableCell>
-                                    <Box sx={{ minWidth: 150 }}>
+                                    <Box
+                                        sx={{
+                                            minWidth: 150,
+                                            height: 40,
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                        }}
+                                    >
                                         <Select
                                             value={user.role}
                                             onChange={(e) => handleRoleChange(user.id, e.target.value as string)}
                                             variant="outlined"
                                             fullWidth
+                                            size="small"
+                                            sx={{
+                                                fontSize: 14,
+                                                height: '40px',
+                                                lineHeight: '1.5',
+                                            }}
+                                            MenuProps={{
+                                                PaperProps: {
+                                                    style: {
+                                                        maxHeight: 200,
+                                                    },
+                                                },
+                                                disableScrollLock: true,
+                                            }}
                                         >
                                             <MenuItem value="пользователь">Пользователь</MenuItem>
                                             <MenuItem value="организатор">Организатор</MenuItem>
