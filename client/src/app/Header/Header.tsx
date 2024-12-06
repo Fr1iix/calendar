@@ -46,7 +46,7 @@ export default function Header() {
                                 {user.email}
                             </Link>
                             {user.role === 'admin' && (
-                                <Link href="/admin" className={styles.authButton}>
+                                <Link href="/adminpanel" className={styles.authButton}>
                                     Админ-панель
                                 </Link>
                             )}

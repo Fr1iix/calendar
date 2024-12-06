@@ -1,0 +1,131 @@
+.adminContainer {
+    display: flex; /* Используем flexbox для расположения боковой панели и контента */
+    height: 100vh; /* Высота на весь экран */
+    background-color: var(--bg-color); /* Цвет фона контейнера */
+}
+
+/* Стили для боковой панели */
+.sidebar {
+    width: 320px; /* Ширина боковой панели */
+    background-color: var(--header-bg); /* Цвет фона боковой панели */
+    color: var(--header-text); /* Цвет текста в боковой панели */
+    padding: 1rem; /* Поля внутри боковой панели */
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2); /* Тень для боковой панели */
+    transition: all 0.3s ease; /* Плавный переход для всех свойств */
+}
+
+/* Стили для логотипа */
+.logoText {
+    font-family: 'Dela Gothic One', sans-serif; /* Шрифт для логотипа */
+    font-size: 24px; /* Размер шрифта для логотипа */
+    margin-top: 0; /* Убираем верхний отступ */
+    text-align: center; /* Центрируем текст */
+}
+
+/* Стили для активной кнопки */
+.active {
+    background-color: rgba(128, 128, 128, 0.4); /* Чуть более насыщенный серый */
+    border-radius: 5px;
+    transition: background-color 0.3s ease; /* Плавный переход */
+}
+
+/* Стили для списка навигации */
+.navList {
+    list-style: none; /* Убираем маркеры списка */
+    padding: 0; /* Убираем внутренние отступы */
+    margin-top: 20px; /* Отступ сверху */
+}
+
+/* Стили для разделителя */
+.separator {
+    border: none; /* Убираем стандартные стили */
+    height: 2px; /* Высота линии */
+    background-color: rgba(98, 98, 98, 0.8); /* Цвет разделителя */
+    margin: 10px 0; /* Отступы сверху и снизу */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2); /* Тень для эффекта глубины */
+}
+
+/* Стили для иконок */
+.iconBlue {
+    color: #007BFF; /* Яркий синий цвет */
+    margin-right: 8px; /* Отступ справа для разделения текста и иконки */
+    transition: color 0.3s; /* Плавный переход цвета */
+}
+.iconRed{
+    color: #992020; /* Яркий синий цвет */
+    margin-right: 8px; /* Отступ справа для разделения текста и иконки */
+    transition: color 0.3s; /* Плавный переход цвета */
+}
+
+.iconOrange {
+    color: #FF8C00; /* Яркий оранжевый цвет */
+    margin-right: 8px; /* Отступ справа для разделения текста и иконки */
+    transition: color 0.3s; /* Плавный переход цвета */
+}
+
+.iconGreen {
+    color: #28A745; /* Яркий зеленый цвет */
+    margin-right: 8px; /* Отступ справа для разделения текста и иконки */
+    transition: color 0.3s; /* Плавный переход цвета */
+}
+
+/* Эффекты при наведении на иконки */
+.navItem:hover .iconBlue {
+    color: #0056b3; /* Темно-синий цвет при наведении */
+}
+
+.navItem:hover .iconOrange {
+    color: #e07b00; /* Темно-оранжевый цвет при наведении */
+}
+
+.navItem:hover .iconGreen {
+    color: #218838; /* Темно-зеленый цвет при наведении */
+}
+
+/* Стили для элементов навигации */
+.navItem {
+    display: flex;  /* Добавляем флексбокс */
+    align-items: center; /* Центрируем элементы по вертикали */
+    margin-top: 10px;
+    font-size: 18px;
+    padding: 12px 20px;
+    margin-bottom: 10px;
+    background-color: transparent;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    border-radius: 5px;
+}
+
+.navItem:hover {
+    background-color: rgba(255, 255, 255, 0.3); /* Увеличен уровень прозрачности фона при наведении */
+    color: var(--header-text); /* Цвет текста при наведении */
+    transform: scale(1); /* Эффект увеличения при наведении */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Добавлена тень при наведении */
+}
+.statCard {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.infoCard {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #f9f9f9;
+    padding: 20px;
+}
+
+.number {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+}
+/* Стили для основного контента */
+.content {
+    flex-grow: 1; /* Позволяет контенту занимать оставшееся пространство */
+    padding: 2rem; /* Поля вокруг контента */
+    background-color: var(--bg-color); /* Цвет фона для основного контента */
+    color: var(--text-color); /* Цвет текста в основном контенте */
+    overflow-y: auto; /* Вертикальная прокрутка, если контент превышает высоту */
+}

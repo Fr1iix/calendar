@@ -5,7 +5,6 @@ import styles from './CompetitionCalendar.module.css';
 import YandexMap from './YandexMap';
 
 interface Competition {
-  eventNumber: number;
   date: string;
   sport: string;
   discipline: string;
@@ -26,7 +25,6 @@ interface Competition {
 
 const competitionsData: Competition[] = [
   {
-    eventNumber: 123456789012345,
     date: '2024-07-15',
     startDay: '01',
     endDay: '03',
@@ -39,13 +37,12 @@ const competitionsData: Competition[] = [
     genderAge: 'Мужчины',
     competitionType: 'Чемпионат',
     city: 'С.-Петербург',
-    latitude: 55.751574,
-    longitude: 37.573856,
+    latitude: 59.93428,
+    longitude: 30.335099,
     categories: ['гендер', 'возраст'],
     organizer: 'Рег. федерация',
   },
   {
-    eventNumber: 2,
     date: '2024-08-20',
     startDay: '05',
     endDay: '07',
@@ -58,8 +55,8 @@ const competitionsData: Competition[] = [
     genderAge: 'Женщины',
     competitionType: 'Межрегиональный',
     city: 'Москва',
-    latitude: 59.93428,
-    longitude: 30.335099,
+    latitude: 55.751574,
+    longitude: 37.573856,
     categories: ['гендер', 'возраст'],
     organizer: 'Фед. России',
   },
@@ -123,7 +120,6 @@ const Page = () => {
           <div className={styles.filterSection}>
             <h2 className={styles.filterTitle}>Фильтры</h2>
             <div className={styles.filterGrid}>
-              {/* Первый ряд */}
               <div className={styles.filterItem}>
                 <label className={styles.filterLabel}>Вид спорта</label>
                 <select
@@ -189,10 +185,12 @@ const Page = () => {
                 />
               </div>
 
-              {/* Второй ряд */}
               <div className={styles.filterItem}>
                 <label className={styles.filterLabel}>&nbsp;</label>
-                <button onClick={toggleMapVisibility} className={styles.mapButton}>
+                <button
+                    onClick={toggleMapVisibility}
+                    className={styles.mapButton}
+                >
                   {isMapVisible ? 'Скрыть карту' : 'Показать карту'}
                 </button>
               </div>
@@ -260,37 +258,23 @@ const Page = () => {
             <table>
               <thead>
               <tr>
-                <th>#</th>
                 <th>Дата</th>
                 <th>Название соревнования</th>
                 <th>Место проведения</th>
                 <th>Кол-во участников</th>
+                <th>Действия</th>
               </tr>
               </thead>
               <tbody>
-              {filteredCompetitions.map((competition) => (
-                  <tr key={competition.eventNumber}>
-                    <td className={styles.numberCell}>{competition.eventNumber}</td>
-                    <td className={styles.dateCell}>
-                      <div className={styles.dateRange}>
-                        {competition.startDay} - {competition.endDay}
-                      </div>
-                      <div className={styles.weekDays}>{competition.weekDays}</div>
-                    </td>
-                    <td className={styles.titleCell}>
-                      <div className={styles.competitionTitle}>
-                        {competition.sport} - {competition.date}
-                      </div>
-                      <div className={styles.categories}>
-                        {competition.categories.map((category, idx) => (
-                            <span key={idx} className={styles.category}>
-                          {category}
-                        </span>
-                        ))}
-                      </div>
-                    </td>
+              {filteredCompetitions.map((competition, index) => (
+                  <tr key={index}>
+                    <td>{competition.date}</td>
+                    <td>{competition.sport}</td>
                     <td>{competition.city}</td>
                     <td>{competition.participants}</td>
+                    <td>
+                      <button className={styles.joinButton}>Принять участие</button>
+                    </td>
                   </tr>
               ))}
               </tbody>
