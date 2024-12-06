@@ -175,6 +175,8 @@
     display: flex;
     gap: 0.5rem;
     flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
 }
 
 .category {
@@ -185,6 +187,7 @@
     border-radius: 0.25rem;
     background-color: #e5e7eb;
     color: #374151;
+    text-align: center;
 }
 
 .category:nth-child(1) {

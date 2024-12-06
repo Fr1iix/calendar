@@ -268,12 +268,29 @@ const Page = () => {
               <tbody>
               {filteredCompetitions.map((competition, index) => (
                   <tr key={index}>
-                    <td>{competition.date}</td>
-                    <td>{competition.sport}</td>
+                    <td className={styles.dateCell}>
+                      <div className={styles.dateRange}>
+                        {competition.startDay} - {competition.endDay}
+                      </div>
+                      <div className={styles.weekDays}>{competition.weekDays}</div>
+                    </td>
+                    <td className={styles.titleCell}>
+                      <div className={styles.competitionTitle}>
+                        {competition.sport} - {competition.date}
+                      </div>
+                      <div className={styles.categories}>
+                        {competition.categories.map((category, idx) => (
+                            <span key={idx} className={styles.category}>
+                          {category}
+                        </span>
+                        ))}
+                      </div>
+                    </td>
                     <td>{competition.city}</td>
                     <td>{competition.participants}</td>
                     <td>
                       <button className={styles.joinButton}>Принять участие</button>
+                      {/* Participation button */}
                     </td>
                   </tr>
               ))}

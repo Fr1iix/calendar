@@ -17,6 +17,7 @@ import {
 import { Card, CardContent, Typography, Grid } from "@mui/material";
 import Neeews from "./neeews";
 import UsersTable from "./UsersTable";
+import Zayav from "./zayav";
 
 export default function AdminPage() {
     const [activeTab, setActiveTab] = useState("statistics");
@@ -76,9 +77,9 @@ export default function AdminPage() {
                         </li>
                         <li
                             className={`${styles.navItem} ${
-                                activeTab === "statistics" ? styles.active : ""
+                                activeTab === "Zayav" ? styles.active : ""
                             }`}
-                            onClick={() => setActiveTab("statistics")}
+                            onClick={() => setActiveTab("Zayav")}
                         >
                             <Dashboard className={styles.iconBlue}/> Мероприятия
                         </li>
@@ -255,6 +256,7 @@ export default function AdminPage() {
                 )}
                 {activeTab === "users" && <UsersTable />}
                 {activeTab === "news" && <Neeews />}
+                {activeTab === "Zayav" && <Zayav />}
             </main>
         </div>
     );
