@@ -11,7 +11,7 @@ interface AuthModalProps {
 
 export default function AuthModal({ isOpen, onClose, onAuthSuccess, initialTab = 'login' }: AuthModalProps) {
     const { login } = useAuth();
-    const [activeTab, setActiveTab] = useState<'login' | 'register'>(initialTab);
+    const [activeTab, setActiveTab] = useState<'login' | 'register' | 'forgotPassword' | 'resetPassword'>(initialTab);
 
     const [registrationData, setRegistrationData] = useState({
         email: '',
@@ -27,6 +27,16 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, initialTab =
     const [loginData, setLoginData] = useState({
         email: '',
         password: ''
+    });
+
+    const [forgotPasswordData, setForgotPasswordData] = useState({
+        email: ''
+    });
+
+    const [resetPasswordData, setResetPasswordData] = useState({
+        code: '',
+        newPassword: '',
+        confirmPassword: ''
     });
 
     useEffect(() => {
@@ -46,6 +56,22 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, initialTab =
     const handleRegistrationChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setRegistrationData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    const handleForgotPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setForgotPasswordData(prev => ({
+            ...prev,
+            [name]: value
+        }));
+    };
+
+    const handleResetPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setResetPasswordData(prev => ({
             ...prev,
             [name]: value
         }));
@@ -128,6 +154,62 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, initialTab =
         }
     };
 
+    const handleForgotPassword = async (e: React.FormEvent) => {
+        e.preventDefault();
+        try {
+            const response = await fetch('/api/auth/forgot-password', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(forgotPasswordData),
+            });
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Ошибка при отправке кода');
+            }
+
+            alert('Код отправлен на ваш email');
+            setActiveTab('resetPassword');
+        } catch (error) {
+            if (error instanceof Error) {
+                alert(error.message);
+            }
+        }
+    };
+
+    const handleResetPassword = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        if (resetPasswordData.newPassword !== resetPasswordData.confirmPassword) {
+            alert('Пароли не совпадают');
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/auth/reset-password', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(resetPasswordData),
+            });
+            const data = await response.json();
+
+            if (!response.ok) {
+                throw new Error(data.message || 'Ошибка при сбросе пароля');
+            }
+
+            alert('Пароль успешно сброшен');
+            onClose();
+        } catch (error) {
+            if (error instanceof Error) {
+                alert(error.message);
+            }
+        }
+    };
+
     if (!isOpen) return null;
 
     return (
@@ -150,7 +232,7 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, initialTab =
                     </button>
                 </div>
 
-                {activeTab === 'login' ? (
+                {activeTab === 'login' && (
                     <form onSubmit={handleLogin} className={styles.form}>
                         <h2>Вход в аккаунт</h2>
                         <input
@@ -174,8 +256,17 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, initialTab =
                         <button type="submit" className={styles.submitButton}>
                             Войти
                         </button>
+                        <button
+                            type="button"
+                            onClick={() => setActiveTab('forgotPassword')}
+                            className={styles.forgotPasswordButton}
+                        >
+                            Забыли пароль?
+                        </button>
                     </form>
-                ) : (
+                )}
+
+                {activeTab === 'register' && (
                     <form onSubmit={handleRegister} className={styles.form}>
                         <h2>Регистрация</h2>
                         <input
@@ -248,6 +339,60 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, initialTab =
                         </select>
                         <button type="submit" className={styles.submitButton}>
                             Зарегистрироваться
+                        </button>
+                    </form>
+                )}
+
+                {activeTab === 'forgotPassword' && (
+                    <form onSubmit={handleForgotPassword} className={styles.form}>
+                        <h2>Восстановление пароля</h2>
+                        <input
+                            type="email"
+                            name="email"
+                            placeholder="Email"
+                            value={forgotPasswordData.email}
+                            onChange={handleForgotPasswordChange}
+                            required
+                            className={styles.input}
+                        />
+                        <button type="submit" className={styles.submitButton}>
+                            Отправить код
+                        </button>
+                    </form>
+                )}
+
+                {activeTab === 'resetPassword' && (
+                    <form onSubmit={handleResetPassword} className={styles.form}>
+                        <h2>Сброс пароля</h2>
+                        <input
+                            type="text"
+                            name="code"
+                            placeholder="Код из письма"
+                            value={resetPasswordData.code}
+                            onChange={handleResetPasswordChange}
+                            required
+                            className={styles.input}
+                        />
+                        <input
+                            type="password"
+                            name="newPassword"
+                            placeholder="Новый пароль"
+                            value={resetPasswordData.newPassword}
+                            onChange={handleResetPasswordChange}
+                            required
+                            className={styles.input}
+                        />
+                        <input
+                            type="password"
+                            name="confirmPassword"
+                            placeholder="Подтвердите новый пароль"
+                            value={resetPasswordData.confirmPassword}
+                            onChange={handleResetPasswordChange}
+                            required
+                            className={styles.input}
+                        />
+                        <button type="submit" className={styles.submitButton}>
+                            Сохранить новый пароль
                         </button>
                     </form>
                 )}
