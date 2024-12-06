@@ -22,9 +22,9 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.resolve(__dirname, 'public')))
 app.use(fileUpload({}))
-
+app.use('/api', router)
 // Центральный обработчик ошибок
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
     console.error(err.stack);
     res.status(500).json({
         message: 'Ошибка сервера',
@@ -32,7 +32,6 @@ app.use((err, req, res, next) => {
     });
 });
 
-app.use('/api', router)
 
 const start = async () => {
     try {
