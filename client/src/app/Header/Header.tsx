@@ -36,7 +36,7 @@ export default function Header() {
                     <Link href="/" className={styles.text}>Главная</Link>
                     <Link href="/news" className={styles.text}>Новости</Link>
                     <Link href="/CompetitionCalendar" className={styles.text}>Соревнования</Link>
-                    <Link href="/application" className={styles.text}>Заявка на соревнование</Link>
+                    <Link href="/zayav_sorev" className={styles.text}>Заявка на соревнование</Link>
                 </nav>
 
                 <div className={styles.authButtons}>
@@ -92,7 +92,7 @@ export default function Header() {
                     <Link href="/" className={styles.mobileLink} onClick={handleLinkClick}>Главная</Link>
                     <Link href="/news" className={styles.mobileLink} onClick={handleLinkClick}>Новости</Link>
                     <Link href="/CompetitionCalendar" className={styles.mobileLink} onClick={handleLinkClick}>Соревнования</Link>
-                    <Link href="/user" className={styles.mobileLink} onClick={handleLinkClick}>Ближайшие соревнования</Link>
+                    <Link href="/zayav_sorev" className={styles.text}>Заявка на соревнование</Link>
 
                     {user ? (
                         <>

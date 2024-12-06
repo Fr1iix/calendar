@@ -1,0 +1,81 @@
+.container {
+    max-width: 40rem;
+    margin: 2rem auto 0;
+    padding: 1.5rem;
+    background-color: #fff;
+    border-radius: 0.5rem;
+    box-shadow: 0 6px 100px rgba(0, 0, 0, 0.1), 0 10px 150px rgba(0, 0, 0, 0.1);
+}
+
+/* Заголовок */
+.title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+/* Стили для формы */
+.form {
+    display: grid;
+    gap: 1rem;
+}
+
+.dateContainer {
+    display: flex;
+    gap: 1rem;
+    width: 100%;
+}
+
+.dateContainer .formGroup {
+    flex: 1;
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+}
+
+.label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #4b5563;
+    margin-bottom: 0.25rem;
+}
+
+.input, .select {
+    padding: 0.75rem; /* Увеличил отступы внутри поля */
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    width: 100%;
+    transition: border-color 0.2s;
+    font-size: 1rem; /* Увеличил размер шрифта */
+}
+
+.dateContainer .input, .dateContainer .select {
+    padding: 0.5rem; /* Для полей даты можно оставить стандартные отступы */
+}
+
+.input:focus, .select:focus {
+    outline: none;
+    border-color: #314367;
+    box-shadow: 0 0 0 2px rgb(49, 67, 103);
+}
+
+/* Кнопка сохранения */
+.submitButton {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #314367;
+    color: white;
+    border-radius: 0.375rem;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: 1rem;
+}
+
+.submitButton:hover {
+    background-color: #2c3b5a;
+}
