@@ -36,7 +36,7 @@ export default function Header() {
                     <Link href="/" className={styles.text}>Главная</Link>
                     <Link href="/news" className={styles.text}>Новости</Link>
                     <Link href="/CompetitionCalendar" className={styles.text}>Соревнования</Link>
-                    <Link href="/user" className={styles.text}>Ближайшие соревнования</Link>
+                    <Link href="/application" className={styles.text}>Заявка на соревнование</Link>
                 </nav>
 
                 <div className={styles.authButtons}>
