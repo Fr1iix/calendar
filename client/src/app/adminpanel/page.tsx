@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
 import styles from "./page.module.css";
-import { Dashboard, Assignment, People, Event } from "@mui/icons-material";
+import {Dashboard, Assignment, People, Event, NoteAdd} from "@mui/icons-material";
 import {
     BarChart,
     Bar,
@@ -15,6 +15,7 @@ import {
     Legend,
 } from "recharts";
 import { Card, CardContent, Typography, Grid } from "@mui/material";
+import Neeews from "./neeews";
 import UsersTable from "./UsersTable";
 
 export default function AdminPage() {
@@ -97,6 +98,14 @@ export default function AdminPage() {
                         >
                             <People className={styles.iconGreen}/> Пользователи
                         </li>
+                        <li
+                            className={`${styles.navItem} ${
+                                activeTab === "news" ? styles.active : ""
+                            }`}
+                            onClick={() => setActiveTab("news")}
+                        >
+                            <NoteAdd className={styles.iconRed}/> Добавление новостей
+                        </li>
                     </ul>
                 </nav>
             </aside>
@@ -105,7 +114,7 @@ export default function AdminPage() {
                 {activeTab === "statistics" && (
                     <Grid container spacing={3}>
                         <Grid item xs={12}>
-                            <Card className={styles.statCard}>
+                        <Card className={styles.statCard}>
                                 <CardContent>
                                     <Typography variant="h5" component="div">
                                         Общая статистика
@@ -245,6 +254,7 @@ export default function AdminPage() {
                     </Grid>
                 )}
                 {activeTab === "users" && <UsersTable />}
+                {activeTab === "news" && <Neeews />}
             </main>
         </div>
     );
