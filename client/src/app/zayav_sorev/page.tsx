@@ -32,6 +32,21 @@ const ZayavSorev = () => {
             <h2 className={styles.title}>Заявка на соревнование</h2>
 
             <form onSubmit={handleSubmit} className={styles.form}>
+                <div className={styles.formGroup}>
+                    <label htmlFor="name" className={styles.label}>
+                        Название
+                    </label>
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleInputChange}
+                        className={styles.input}
+                        placeholder="Введите название соревнования"
+                    />
+                </div>
+
                 <div className={styles.dateContainer}>
                     <div className={styles.formGroup}>
                         <label htmlFor="dateStart" className={styles.label}>
@@ -60,21 +75,6 @@ const ZayavSorev = () => {
                             className={styles.input}
                         />
                     </div>
-                </div>
-
-                <div className={styles.formGroup}>
-                    <label htmlFor="name" className={styles.label}>
-                        Название
-                    </label>
-                    <input
-                        type="text"
-                        id="name"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleInputChange}
-                        className={styles.input}
-                        placeholder="Введите название соревнования"
-                    />
                 </div>
 
                 <div className={styles.formGroup}>
