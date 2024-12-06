@@ -103,3 +103,18 @@
         padding: 10px; /* Уменьшаем отступы */
     }
 }
+
+.forgotPasswordButton {
+    background: none;
+    border: none;
+    color: #888; /* Серый цвет текста, как в полях ввода */
+    text-align: center;
+    cursor: pointer;
+    padding: 5px 0; /* Небольшой отступ сверху */
+    font-size: 14px;
+    margin-top: 10px; /* Отступ сверху для кнопки */
+}
+
+.forgotPasswordButton:hover {
+    text-decoration: underline;
+}
