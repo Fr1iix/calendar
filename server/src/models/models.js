@@ -11,7 +11,6 @@ const User = sequelize.define('User', {
     dateRegister: { type: DataTypes.DATE },
     isEmailVerified: { type: DataTypes.BOOLEAN, defaultValue: false, },
     verificationCode: { type: DataTypes.STRING, allowNull: true, },
-
 }, { tableName: 'User', timestamps: false });
 
 const UserInfo = sequelize.define('UserInfo', {
@@ -67,7 +66,7 @@ const HistoryUser = sequelize.define('HistoryUser', {
 // Роли и права доступа
 const Role = sequelize.define('Role', {
     idRole: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    role: { type: DataTypes.STRING, allowNull: false },
+    role: { type: DataTypes.STRING, allowNull: false, defaultValue: 'user' },
 }, { tableName: 'Role', timestamps: false });
 
 const Permission = sequelize.define('Permission', {
