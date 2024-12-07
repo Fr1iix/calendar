@@ -1,6 +1,8 @@
 const express = require('express');
-const { processData } = require('../controller/EventController');
+const EventController = require('../controller/EventController');
 
 const router = express.Router();
+
+router.get('/createJsonFile', EventController.parse)
 
 module.exports = router;

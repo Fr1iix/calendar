@@ -7,6 +7,7 @@ const subscriptionsRouter = require("./SubscriptionsRouter")
 const eventRouter = require('./EventRouter');
 const userController = require('../controller/UserController');
 const authMiddleware = require('../middleware/authmiddleware');
+const GenderRouter = require('./GenderRouter')
 
 
 router.post('/registration', userController.registration);
@@ -23,5 +24,6 @@ router.use('/userinfo', userinfoRouter)
 router.use('/sports', sportsRouter)
 router.use('/subscriptions', subscriptionsRouter)
 router.use('/event', eventRouter);
+router.use('/gender', GenderRouter)
 
 module.exports = router

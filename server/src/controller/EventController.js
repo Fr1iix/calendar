@@ -17,7 +17,7 @@ class EventController{
             let currentEvent = {};
             let collecting = false;
 
-            lines.forEach((line) => {
+            lines.forEach((line, index) => {
                 line = line.trim();
 
                 // Проверяем начало новой записи
@@ -53,10 +53,10 @@ class EventController{
                         currentEvent.disciplineProgram = line.replace('КЛАСС', '').trim();
                     } else if (line.match(/\d{2}\.\d{2}\.\d{4}/)) {
                         // Обрабатываем несколько дат
-                        currentEvent.dates += `${line}`;
+                        currentEvent.dates += `${line} `;
                     } else if (line.match(/РОССИЯ|МОСКОВСКАЯ ОБЛАСТЬ|РЕСПУБЛИКА БАШКОРТОСТАН|г\.|область|край/)) {
                         // Обрабатываем несколько локаций
-                        currentEvent.location += `${line}`;
+                        currentEvent.location += `${line} `;
                     } else if (line.match(/^\d+$/)) {
                         currentEvent.participants = line;
                     }
@@ -100,9 +100,8 @@ class EventController{
             );
 
             // Сохраняем результат в JSON
+            fs.writeFileSync('events.json', JSON.stringify(uniqueEvents, null, 2), 'utf8');
             console.log('Данные сохранены в файл events.json');
-            return fs.writeFileSync('events.json', JSON.stringify(uniqueEvents, null, 2), 'utf8');
-
         }).catch(err => {
             console.error('Ошибка при чтении PDF:', err);
         });
@@ -110,3 +109,4 @@ class EventController{
 }
 
 
+module.exports = new EventController();
