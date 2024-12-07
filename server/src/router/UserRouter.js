@@ -1,14 +1,19 @@
-const express = require('express');
-const { register, verifyEmail, login } = require('../controller/UserController');
-const router = express.Router();
+const Router = require('express');
+const userController = require('../controller/UserController');
+const authMiddleware = require('../middleware/authMiddleware');
+const router = new Router();
 
-// Регистрация пользователя
-router.post('/register', register);
-
+// Роут для регистрации
+router.post('/register', userController.register);
+// Роут для логина
+router.post('/login', userController.login);
+// Роут для получения пользователей по ID
+router.get('/users', authMiddleware('admin'), userController.getUsersById);
+// Роут для обновления данных пользователя
+router.put('/update', authMiddleware(), userController.updateUser);
 // Подтверждение почты
-router.post('/verify-email', verifyEmail);
+router.post('/verify-email', userController.verifyEmail);
 
-// Логин пользователя
-router.post('/login', login);
+
 
 module.exports = router;

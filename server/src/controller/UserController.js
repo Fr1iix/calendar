@@ -1,58 +1,69 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { User, Role } = require('../models/models');
+const { User, UserInfo, Address, City, Region, Country, Gender } = require('../models/models');
 const sendEmail = require('../utils/sendEmail');
 const { Op } = require('sequelize');
 const crypto = require('crypto');
 
-// Функция для хэширования пароля
-const hashPassword = async (password) => {
-    return await bcrypt.hash(password, 10);
-};
-
 // Функция для регистрации пользователя
 exports.register = async (req, res) => {
-    const { email, phone, password } = req.body;
+    const { email, phone, password, firstName, lastName, middleName, age, city, region, country, gender } = req.body;
 
     try {
-        // Проверка на существующего пользователя
+        // Проверка существующего пользователя
         const existingUser = await User.findOne({
             where: { [Op.or]: [{ email }, { phone }] },
         });
 
         if (existingUser) {
-            return res.status(400).json({ message: 'Пользователь уже существует' });
+            return res.status(400).json({ message: 'Пользователь уже существует.' });
         }
 
-        // Хэширование пароля
-        const hashedPassword = await hashPassword(password);
-
-        // Создание нового пользователя
+        // Создание записи пользователя
+        const hashedPassword = await bcrypt.hash(password, 10);
         const user = await User.create({
             email,
             phone,
             password: hashedPassword,
+            dateRegister: new Date(),
         });
 
-        // Генерация кода для подтверждения почты
+        // Создание записи в UserInfo
+        await UserInfo.create({
+            idUser: user.idUser,
+            firstName,
+            lastName,
+            middleName,
+            age,
+        });
+
+        // Создание связанных записей
+        const [createdCity] = await City.findOrCreate({ where: { name: city } });
+        const [createdRegion] = await Region.findOrCreate({ where: { name: region } });
+        const [createdCountry] = await Country.findOrCreate({ where: { name: country } });
+        const [createdGender] = await Gender.findOrCreate({ where: { gender } });
+
+        await Address.create({
+            idCity: createdCity.idCity,
+            idRegion: createdRegion.idRegion,
+            idCountry: createdCountry.idCountry,
+        });
+
+        // Генерация кода подтверждения
         const verificationCode = crypto.randomBytes(20).toString('hex');
         user.verificationCode = verificationCode;
         await user.save();
 
-        // Отправка письма с кодом подтверждения через OAuth
-        const emailSent = await sendEmail(user.email, 'Подтверждение почты', verificationCode);
-
-        if (emailSent) {
-            return res.status(200).json({
-                message: 'Пожалуйста, проверьте свою почту для подтверждения аккаунта.',
-            });
+        // Отправка письма с подтверждением
+        const emailSent = await sendEmail(user.email, 'Подтверждение почты', `Ваш код: ${verificationCode}`);
+        if (!emailSent) {
+            return res.status(500).json({ message: 'Ошибка при отправке письма.' });
         }
 
-        res.status(500).json({ message: 'Ошибка при отправке письма с подтверждением.' });
-
+        res.status(200).json({ message: 'Регистрация успешна. Проверьте почту для подтверждения.' });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Ошибка на сервере' });
+        res.status(500).json({ message: 'Ошибка на сервере.' });
     }
 };
 
@@ -64,55 +75,145 @@ exports.verifyEmail = async (req, res) => {
         const user = await User.findOne({ where: { email, verificationCode } });
 
         if (!user) {
-            return res.status(400).json({ message: 'Неверный код подтверждения или пользователь не найден.' });
+            return res.status(400).json({ message: 'Неверный код или email.' });
         }
 
-        // Подтверждаем email
         user.isEmailVerified = true;
         user.verificationCode = null;
         await user.save();
 
-        res.status(200).json({ message: 'Почта успешно подтверждена!' });
+        res.status(200).json({ message: 'Почта подтверждена!' });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Ошибка на сервере' });
+        res.status(500).json({ message: 'Ошибка на сервере.' });
     }
 };
 
-// Функция для логина пользователя
+// Функция для логина
 exports.login = async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        // Ищем пользователя по email
         const user = await User.findOne({ where: { email } });
+        if (!user) return res.status(404).json({ message: 'Пользователь не найден.' });
 
-        if (!user) {
-            return res.status(400).json({ message: 'Пользователь с таким email не найден' });
-        }
-
-        // Проверяем пароль
         const isPasswordValid = await bcrypt.compare(password, user.password);
-        if (!isPasswordValid) {
-            return res.status(400).json({ message: 'Неверный пароль' });
-        }
+        if (!isPasswordValid) return res.status(401).json({ message: 'Неверный пароль.' });
 
-        // Проверяем, подтверждена ли почта
         if (!user.isEmailVerified) {
-            return res.status(400).json({ message: 'Пожалуйста, подтвердите свою почту.' });
+            return res.status(403).json({ message: 'Email не подтвержден.' });
         }
 
-        // Генерация JWT токена
         const token = jwt.sign(
-            { id: user.id, email: user.email, phone: user.phone },
+            { idUser: user.idUser, email: user.email },
             process.env.JWT_SECRET,
-            { expiresIn: '1h' } // Токен истекает через 1 час
+            { expiresIn: '1h' }
         );
 
-        // Отправляем токен в ответе
-        res.status(200).json({ message: 'Авторизация успешна', token });
+        res.status(200).json({ message: 'Вход выполнен.', token });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Ошибка на сервере' });
+        res.status(500).json({ message: 'Ошибка на сервере.' });
+    }
+};
+
+// Получение пользователей по ID
+exports.getUsersById = async (req, res) => {
+    const { ids } = req.query; // Получаем массив ID через query-параметры
+
+    if (!ids) {
+        return res.status(400).json({ message: 'Не переданы ID пользователей.' });
+    }
+
+    const idArray = ids.split(',').map(Number); // Преобразуем строку в массив чисел
+
+    try {
+        // Ищем пользователей с указанными ID, включая их связные таблицы
+        const users = await User.findAll({
+            where: {
+                idUser: { [Op.in]: idArray }
+            },
+            include: [
+                {
+                    model: UserInfo,
+                    as: 'userInfo'
+                },
+                {
+                    model: Address,
+                    as: 'address',
+                    include: [
+                        {
+                            model: City,
+                            as: 'city',
+                            include: [
+                                {
+                                    model: Region,
+                                    as: 'region',
+                                    include: [{ model: Country, as: 'country' }]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                { model: Gender, as: 'gender' }
+            ]
+        });
+
+        if (users.length === 0) {
+            return res.status(404).json({ message: 'Пользователи с указанными ID не найдены.' });
+        }
+
+        res.status(200).json(users);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Ошибка на сервере.' });
+    }
+};
+
+// Обновление данных пользователя
+exports.updateUser = async (req, res) => {
+    const { idUser } = req.user; // ID пользователя из токена
+    const { email, phone, password, firstName, lastName, middleName, age, genderId } = req.body;
+
+    try {
+        // Ищем пользователя по ID
+        const user = await User.findOne({ where: { idUser } });
+
+        if (!user) {
+            return res.status(404).json({ message: 'Пользователь не найден.' });
+        }
+
+        // Обновляем данные в таблице User
+        if (email) user.email = email;
+        if (phone) user.phone = phone;
+        if (password) user.password = await bcrypt.hash(password, 10);
+
+        await user.save();
+
+        // Обновляем данные в таблице UserInfo
+        const userInfo = await UserInfo.findOne({ where: { idUser } });
+
+        if (userInfo) {
+            if (firstName) userInfo.firstName = firstName;
+            if (lastName) userInfo.lastName = lastName;
+            if (middleName) userInfo.middleName = middleName;
+            if (age) userInfo.age = age;
+            await userInfo.save();
+        }
+
+        // Обновляем пол пользователя (при наличии)
+        if (genderId) {
+            const gender = await Gender.findOne({ where: { idGender: genderId } });
+            if (!gender) {
+                return res.status(400).json({ message: 'Указан некорректный идентификатор пола.' });
+            }
+            user.genderId = genderId;
+            await user.save();
+        }
+
+        res.status(200).json({ message: 'Данные успешно обновлены.' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Ошибка на сервере.' });
     }
 };
