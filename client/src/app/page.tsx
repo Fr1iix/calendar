@@ -2,6 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import styles from './page.module.css';
 import Link from 'next/link';
+import './globals.css'
 import Marquee from 'react-fast-marquee'; // Импортируем Marquee
 
 export default function Home() {

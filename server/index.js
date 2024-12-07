@@ -23,14 +23,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.resolve(__dirname, 'public')))
 app.use(fileUpload({}))
 app.use('/api', router)
-// Центральный обработчик ошибок
-app.use((err, req, res) => {
-    console.error(err.stack);
-    res.status(500).json({
-        message: 'Ошибка сервера',
-        error: process.env.NODE_ENV === 'development' ? err.message : {}
-    });
-});
+
 
 
 const start = async () => {

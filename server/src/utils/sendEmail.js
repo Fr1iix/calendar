@@ -1,28 +1,51 @@
+const { google } = require('googleapis');
 const nodemailer = require('nodemailer');
 
-// Настройки для отправки email через SMTP сервер
-const transporter = nodemailer.createTransport({
-    service: 'gmail', // Это пример с Gmail, но ты можешь использовать другой SMTP-сервис
-    auth: {
-        user: 'your-email@gmail.com', // Твой email
-        pass: 'your-email-password', // Твой пароль (или лучше, если это приложение, используй app password)
-    },
-});
+// Настройка OAuth 2.0
+const OAuth2 = google.auth.OAuth2;
 
-// Функция для отправки email
-const sendEmail = async (to, subject, text) => {
+const oauth2Client = new OAuth2(
+    process.env.GOOGLE_CLIENT_ID, // ваш Client ID
+    process.env.GOOGLE_CLIENT_SECRET, // ваш Client Secret
+    'http://localhost:5000/oauth2callback' // URL для редиректа (обновите, если нужно)
+);
+
+// Функция для отправки письма
+async function sendEmail(to, subject, text) {
     try {
-        const info = await transporter.sendMail({
-            from: '"Event Notification" <your-email@gmail.com>', // От кого
-            to, // Кому
-            subject, // Тема
-            text, // Текст письма
+        // Получение refreshToken и accessToken
+        oauth2Client.setCredentials({
+            refresh_token: process.env.GOOGLE_REFRESH_TOKEN, // ваш refresh token
         });
 
-        console.log('Email sent: ' + info.response);
+        const accessToken = await oauth2Client.getAccessToken();
+
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                type: 'OAuth2',
+                user: process.env.GOOGLE_USER, // ваш email
+                clientId: process.env.GOOGLE_CLIENT_ID,
+                clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+                refreshToken: process.env.GOOGLE_REFRESH_TOKEN,
+                accessToken: accessToken.token,
+            },
+        });
+
+        const mailOptions = {
+            from: process.env.GOOGLE_USER,
+            to,
+            subject,
+            text,
+        };
+
+        await transporter.sendMail(mailOptions);
+        console.log('Письмо отправлено!');
+        return true;
     } catch (error) {
-        console.error('Error sending email: ', error);
+        console.error('Ошибка при отправке письма:', error);
+        return false;
     }
-};
+}
 
 module.exports = sendEmail;

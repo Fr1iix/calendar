@@ -1,25 +1,28 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./page.module.css";
-import {Dashboard, Assignment, People, Event, NoteAdd} from "@mui/icons-material";
-import {
-    BarChart,
-    Bar,
-    XAxis,
-    YAxis,
-    Tooltip,
-    ResponsiveContainer,
-    PieChart,
-    Pie,
-    Cell,
-    Legend,
-} from "recharts";
+import { Dashboard, Assignment, People, Event, NoteAdd } from "@mui/icons-material";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, Legend } from "recharts";
 import { Card, CardContent, Typography, Grid } from "@mui/material";
 import Neeews from "./neeews";
 import UsersTable from "./UsersTable";
+import Zayav from "./zayav";
+import Sorevi from "./sorevi"
 
-export default function AdminPage() {
-    const [activeTab, setActiveTab] = useState("statistics");
+const AdminPage: React.FC = () => {
+    const [activeTab, setActiveTab] = useState<string>("statistics");
+
+    useEffect(() => {
+        const savedTab = localStorage.getItem("activeTab");
+        if (savedTab) {
+            setActiveTab(savedTab);
+        }
+    }, []);
+
+    const handleTabChange = (tab: string) => {
+        setActiveTab(tab);
+        localStorage.setItem("activeTab", tab);
+    };
 
     // Пример данных для статистики по месяцам
     const monthlyData = [
@@ -63,46 +66,37 @@ export default function AdminPage() {
         <div className={styles.adminContainer}>
             <aside className={styles.sidebar}>
                 <h2 className={styles.logoText}>Админ-панель</h2>
-                <hr className={styles.separator}/>
+                <hr className={styles.separator} />
                 <nav>
                     <ul className={styles.navList}>
                         <li
-                            className={`${styles.navItem} ${
-                                activeTab === "statistics" ? styles.active : ""
-                            }`}
-                            onClick={() => setActiveTab("statistics")}
+                            className={`${styles.navItem} ${activeTab === "statistics" ? styles.active : ""}`}
+                            onClick={() => handleTabChange("statistics")}
                         >
                             <Dashboard className={styles.iconBlue}/> Статистика
                         </li>
                         <li
-                            className={`${styles.navItem} ${
-                                activeTab === "statistics" ? styles.active : ""
-                            }`}
-                            onClick={() => setActiveTab("statistics")}
+                            className={`${styles.navItem} ${activeTab === "Zayav" ? styles.active : ""}`}
+                            onClick={() => handleTabChange("Zayav")}
                         >
-                            <Dashboard className={styles.iconBlue}/> Мероприятия
+                            <Event className={styles.iconPurple}/> Мероприятия
                         </li>
+
                         <li
-                            className={`${styles.navItem} ${
-                                activeTab === "applications" ? styles.active : ""
-                            }`}
-                            onClick={() => setActiveTab("applications")}
+                            className={`${styles.navItem} ${activeTab === "Sorevi" ? styles.active : ""}`}
+                            onClick={() => handleTabChange("Sorevi")}
                         >
                             <Assignment className={styles.iconOrange}/> Заявки соревнований
                         </li>
                         <li
-                            className={`${styles.navItem} ${
-                                activeTab === "users" ? styles.active : ""
-                            }`}
-                            onClick={() => setActiveTab("users")}
+                            className={`${styles.navItem} ${activeTab === "users" ? styles.active : ""}`}
+                            onClick={() => handleTabChange("users")}
                         >
                             <People className={styles.iconGreen}/> Пользователи
                         </li>
                         <li
-                            className={`${styles.navItem} ${
-                                activeTab === "news" ? styles.active : ""
-                            }`}
-                            onClick={() => setActiveTab("news")}
+                            className={`${styles.navItem} ${activeTab === "news" ? styles.active : ""}`}
+                            onClick={() => handleTabChange("news")}
                         >
                             <NoteAdd className={styles.iconRed}/> Добавление новостей
                         </li>
@@ -113,8 +107,8 @@ export default function AdminPage() {
             <main className={styles.content}>
                 {activeTab === "statistics" && (
                     <Grid container spacing={3}>
-                        <Grid item xs={12}>
-                        <Card className={styles.statCard}>
+                    <Grid item xs={12}>
+                            <Card className={styles.statCard}>
                                 <CardContent>
                                     <Typography variant="h5" component="div">
                                         Общая статистика
@@ -125,26 +119,11 @@ export default function AdminPage() {
                                                 <CardContent>
                                                     <Grid container alignItems="center">
                                                         <Grid item xs>
-                                                            <Typography
-                                                                variant="body1"
-                                                                className={styles.number}
-                                                                style={{
-                                                                    display: "flex",
-                                                                    alignItems: "center",
-                                                                }}
-                                                            >
-                                                                <People
-                                                                    style={{
-                                                                        fontSize: 40,
-                                                                        color: "#0088FE",
-                                                                        marginRight: 10,
-                                                                    }}
-                                                                />
+                                                            <Typography variant="body1" className={styles.number} style={{ display: "flex", alignItems: "center" }}>
+                                                                <People style={{ fontSize: 40, color: "#0088FE", marginRight: 10 }} />
                                                                 5200
                                                             </Typography>
-                                                            <Typography variant="body1">
-                                                                Общее количество пользователей
-                                                            </Typography>
+                                                            <Typography variant="body1">Общее количество пользователей</Typography>
                                                         </Grid>
                                                     </Grid>
                                                 </CardContent>
@@ -155,41 +134,26 @@ export default function AdminPage() {
                                                 <CardContent>
                                                     <Grid container alignItems="center">
                                                         <Grid item xs>
-                                                            <Typography
-                                                                variant="body1"
-                                                                className={styles.number}
-                                                                style={{
-                                                                    display: "flex",
-                                                                    alignItems: "center",
-                                                                }}
-                                                            >
-                                                                <Event
-                                                                    style={{
-                                                                        fontSize: 40,
-                                                                        color: "#FF8042",
-                                                                        marginRight: 10,
-                                                                    }}
-                                                                />
+                                                            <Typography variant="body1" className={styles.number} style={{ display: "flex", alignItems: "center" }}>
+                                                                <Event style={{ fontSize: 40, color: "#FF8042", marginRight: 10 }} />
                                                                 120
                                                             </Typography>
-                                                            <Typography variant="body1">
-                                                                Общее количество мероприятий
-                                                            </Typography>
+                                                            <Typography variant="body1">Общее количество мероприятий</Typography>
                                                         </Grid>
                                                     </Grid>
                                                 </CardContent>
                                             </Card>
                                         </Grid>
                                     </Grid>
-                                    <Grid container spacing={3} style={{marginTop: 20}}>
+                                    <Grid container spacing={3} style={{ marginTop: 20 }}>
                                         <Grid item xs={12} md={4}>
                                             <Typography variant="h6">Пользователи</Typography>
                                             <ResponsiveContainer width="100%" height={200}>
                                                 <BarChart data={monthlyData}>
-                                                    <XAxis dataKey="month"/>
-                                                    <YAxis/>
-                                                    <Tooltip/>
-                                                    <Bar dataKey="users" fill="#0088FE"/>
+                                                    <XAxis dataKey="month" />
+                                                    <YAxis />
+                                                    <Tooltip />
+                                                    <Bar dataKey="users" fill="#0088FE" />
                                                 </BarChart>
                                             </ResponsiveContainer>
                                         </Grid>
@@ -197,10 +161,10 @@ export default function AdminPage() {
                                             <Typography variant="h6">Заявки</Typography>
                                             <ResponsiveContainer width="100%" height={200}>
                                                 <BarChart data={monthlyData}>
-                                                    <XAxis dataKey="month"/>
-                                                    <YAxis/>
-                                                    <Tooltip/>
-                                                    <Bar dataKey="applications" fill="#FFBB28"/>
+                                                    <XAxis dataKey="month" />
+                                                    <YAxis />
+                                                    <Tooltip />
+                                                    <Bar dataKey="applications" fill="#FFBB28" />
                                                 </BarChart>
                                             </ResponsiveContainer>
                                         </Grid>
@@ -208,10 +172,10 @@ export default function AdminPage() {
                                             <Typography variant="h6">Новости</Typography>
                                             <ResponsiveContainer width="100%" height={200}>
                                                 <BarChart data={monthlyData}>
-                                                    <XAxis dataKey="month"/>
-                                                    <YAxis/>
-                                                    <Tooltip/>
-                                                    <Bar dataKey="news" fill="#FF8042"/>
+                                                    <XAxis dataKey="month" />
+                                                    <YAxis />
+                                                    <Tooltip />
+                                                    <Bar dataKey="news" fill="#FF8042" />
                                                 </BarChart>
                                             </ResponsiveContainer>
                                         </Grid>
@@ -219,20 +183,12 @@ export default function AdminPage() {
                                             <Typography variant="h6">Статистика по полу</Typography>
                                             <ResponsiveContainer width="100%" height={250}>
                                                 <PieChart>
-                                                    <Pie
-                                                        data={genderData}
-                                                        dataKey="value"
-                                                        nameKey="name"
-                                                        cx="50%"
-                                                        cy="50%"
-                                                        outerRadius={80}
-                                                        label
-                                                    >
+                                                    <Pie data={genderData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} label>
                                                         {genderData.map((entry, index) => (
-                                                            <Cell key={`cell-${index}`} fill={entry.color}/>
+                                                            <Cell key={`cell-${index}`} fill={entry.color} />
                                                         ))}
                                                     </Pie>
-                                                    <Legend/>
+                                                    <Legend />
                                                 </PieChart>
                                             </ResponsiveContainer>
                                         </Grid>
@@ -240,10 +196,10 @@ export default function AdminPage() {
                                             <Typography variant="h6">Мероприятия</Typography>
                                             <ResponsiveContainer width="100%" height={200}>
                                                 <BarChart data={eventData}>
-                                                    <XAxis dataKey="month"/>
-                                                    <YAxis/>
-                                                    <Tooltip/>
-                                                    <Bar dataKey="events" fill="#82ca9d"/>
+                                                    <XAxis dataKey="month" />
+                                                    <YAxis />
+                                                    <Tooltip />
+                                                    <Bar dataKey="events" fill="#82ca9d" />
                                                 </BarChart>
                                             </ResponsiveContainer>
                                         </Grid>
@@ -255,7 +211,12 @@ export default function AdminPage() {
                 )}
                 {activeTab === "users" && <UsersTable />}
                 {activeTab === "news" && <Neeews />}
+                {activeTab === "Zayav" && <Zayav />}
+                {activeTab === "Sorevi" && <Sorevi />}
+
             </main>
         </div>
     );
 }
+
+export default AdminPage;
