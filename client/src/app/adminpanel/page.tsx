@@ -72,31 +72,32 @@ const AdminPage: React.FC = () => {
                             className={`${styles.navItem} ${activeTab === "statistics" ? styles.active : ""}`}
                             onClick={() => handleTabChange("statistics")}
                         >
-                            <Dashboard className={styles.iconBlue} /> Статистика
+                            <Dashboard className={styles.iconBlue}/> Статистика
                         </li>
                         <li
                             className={`${styles.navItem} ${activeTab === "Zayav" ? styles.active : ""}`}
                             onClick={() => handleTabChange("Zayav")}
                         >
-                            <Dashboard className={styles.iconBlue} /> Мероприятия
+                            <Event className={styles.iconPurple}/> Мероприятия
                         </li>
+
                         <li
                             className={`${styles.navItem} ${activeTab === "applications" ? styles.active : ""}`}
                             onClick={() => handleTabChange("applications")}
                         >
-                            <Assignment className={styles.iconOrange} /> Заявки соревнований
+                            <Assignment className={styles.iconOrange}/> Заявки соревнований
                         </li>
                         <li
                             className={`${styles.navItem} ${activeTab === "users" ? styles.active : ""}`}
                             onClick={() => handleTabChange("users")}
                         >
-                            <People className={styles.iconGreen} /> Пользователи
+                            <People className={styles.iconGreen}/> Пользователи
                         </li>
                         <li
                             className={`${styles.navItem} ${activeTab === "news" ? styles.active : ""}`}
                             onClick={() => handleTabChange("news")}
                         >
-                            <NoteAdd className={styles.iconRed} /> Добавление новостей
+                            <NoteAdd className={styles.iconRed}/> Добавление новостей
                         </li>
                     </ul>
                 </nav>
@@ -105,7 +106,7 @@ const AdminPage: React.FC = () => {
             <main className={styles.content}>
                 {activeTab === "statistics" && (
                     <Grid container spacing={3}>
-                        <Grid item xs={12}>
+                    <Grid item xs={12}>
                             <Card className={styles.statCard}>
                                 <CardContent>
                                     <Typography variant="h5" component="div">
