@@ -15,7 +15,7 @@ const User = sequelize.define('User', {
 }, { tableName: 'User', timestamps: false });
 
 const UserInfo = sequelize.define('UserInfo', {
-    idUser: { type: DataTypes.INTEGER, primaryKey: true },
+    idUserInfo: { type: DataTypes.INTEGER, primaryKey: true },
     firstName: { type: DataTypes.STRING },
     lastName: { type: DataTypes.STRING },
     middleName: { type: DataTypes.STRING },
@@ -98,17 +98,17 @@ const Address = sequelize.define('Address', {
 
 const City = sequelize.define('City', {
     idCity: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    name: { type: DataTypes.STRING, allowNull: false },
+    city: { type: DataTypes.STRING, allowNull: false },
 }, { tableName: 'City', timestamps: false });
 
 const Region = sequelize.define('Region', {
     idRegion: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    name: { type: DataTypes.STRING, allowNull: false },
+    region: { type: DataTypes.STRING, allowNull: false },
 }, { tableName: 'Region', timestamps: false });
 
 const Country = sequelize.define('Country', {
     idCountry: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    name: { type: DataTypes.STRING, allowNull: false },
+    country: { type: DataTypes.STRING, allowNull: false },
 }, { tableName: 'Country', timestamps: false });
 
 const AnalyticsRegion = sequelize.define('AnalyticsRegion', {
@@ -242,6 +242,9 @@ UserInfo.belongsTo(Gender, { foreignKey: 'idGender' })
 Gender.hasOne(Event, { foreignKey: 'idGender' });
 Event.belongsTo(Gender, { foreignKey: 'idGender' })
 
+Address.hasOne(Event, { foreignKey: 'idAddress' });
+Event.belongsTo(Address, { foreignKey: 'idAddress' })
+
 Address.hasOne(UserInfo, { foreignKey: 'idAddress' });
 UserInfo.belongsTo(Address, { foreignKey: 'idAddress' })
 
@@ -276,8 +279,8 @@ Event.hasMany(Result, { foreignKey: 'idEvent' });
 Result.hasOne(UserRating, { foreignKey: 'idUser' });
 UserRating.belongsTo(Result, { foreignKey: 'idUser' });
 
-Result.hasOne(Region, { foreignKey: 'idResult' });
-Region.belongsTo(Result, { foreignKey: 'idResult' });
+Region.hasOne(Region, { foreignKey: 'idRegion' });
+Result.belongsTo(Region, { foreignKey: 'idRegion' });
 
 UserRating.hasOne(RatingHistory, { foreignKey: 'idUser' });
 RatingHistory.belongsTo(UserRating, { foreignKey: 'idUser' });
@@ -295,6 +298,9 @@ Result.belongsTo(Protocol, { foreignKey: 'idProtocol' });
 // Связь AnalyticsTeam с командами
 AnalyticsTeam.belongsTo(Commands, { foreignKey: 'idCommands' });
 Commands.hasOne(AnalyticsTeam, { foreignKey: 'idCommands' });
+
+AnalyticsRegion.belongsTo(Region, { foreignKey: 'idRegion' });
+Region.hasOne(AnalyticsRegion, { foreignKey: 'idRegion' });
 
 // Связь UserPlace с пользователями и событиями
 User.hasOne(UserPlace, { foreignKey: 'idUser' });
