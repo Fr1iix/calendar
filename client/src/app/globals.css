@@ -29,7 +29,7 @@ body {
   flex-direction: column; /* Вертикальное выравнивание */
   min-height: 100vh; /* Минимальная высота 100% от высоты экрана */
   margin: 0; /* Убираем отступы */
-  background-image: url('/background.png'); /* Добавляем фон */
+  background-image: url('../../public/background.png'); /* Добавляем фон */
   background-attachment: fixed; /* Фон фиксирован */
   background-size: cover; /* Масштабируем, чтобы покрыть весь экран */
   background-position: center; /* Центрируем изображение */
@@ -37,7 +37,7 @@ body {
 }
 main {
   flex: 1; /* Позволяет основному контенту занимать оставшееся пространство */
-  background-image: url('/background.png');
+  background-image: url("../../public/background.png");
 }
 
 footer {
