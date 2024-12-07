@@ -6,6 +6,7 @@ const userController = require('../controller/UserController');
 const authMiddleware = require('../middleware/authmiddleware');
 const AddressRouter = require('./AddressRouter');
 const GenderRouter = require('./GenderRouter');
+const NewsRouter = require('/NewsRouter')
 
 // Роуты для регистрации и авторизации
 router.post('/registration', userController.register); // Регистрация
@@ -21,5 +22,6 @@ router.use('/user', userRouter); // Роуты для пользователей
 router.use('/event', eventRouter); // Роуты для событий
 router.use('/address', AddressRouter)
 router.use('/gender', GenderRouter)
+router.use('/news', NewsRouter)
 
 module.exports = router;

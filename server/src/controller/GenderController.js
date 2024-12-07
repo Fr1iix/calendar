@@ -72,13 +72,13 @@ class GenderController{
 
                 console.log("Данные успешно записаны в базу данных!");
             } catch (err) {
-                console.error("Ошибка работы с базой данных:", err);
+                next("Ошибка работы с базой данных:", err);
             }
 
                 res.json(data1);
 
             } catch (parseErr) {
-                console.error("Ошибка парсинга JSON:", parseErr);
+                next("Ошибка парсинга JSON:", parseErr);
             }
         });
     }

@@ -2,38 +2,12 @@ const fs = require('fs');
 const pdfParse = require('pdf-parse');
 const {Event, Gender, Address, Country, Region, City} = require("../models/models");
 const ApiError = require("../error/ApiError");
-const {parseDataURI} = require("nodemailer/lib/shared");
 const moment = require("moment");
 
 // Чтение файла PDF
 const pdfBuffer = fs.readFileSync('src/uploads/pdfFile.pdf');
 
 class EventController{
-    transformData(data) {
-        return data.map(entry => {
-            // Разделяем location на страну, регион и город
-            const locationMatch = entry.location.match(/^(РОССИЯ)([^,]+),\s*(.+)$/);
-            const country = locationMatch ? locationMatch[1].trim() : null;
-            const region = locationMatch ? locationMatch[2].trim() : null;
-            const city = locationMatch ? locationMatch[3].trim() : null;
-            // Разделяем genderAge на пол и возраст
-            const genderMatch = entry.genderAge.match(/^(.*) от (\d+.*)$/);
-            const gender = genderMatch ? genderMatch[1].split(",").map(g => g.trim()) : [];
-            const age = genderMatch ? genderMatch[2].trim() : null;
-
-            return {
-                name: entry.name,
-                dates: entry.dates,
-                country,
-                region,
-                city,
-                participants: parseInt(entry.participants, 10),
-                gender,
-                age,
-                disciplineProgram: entry.disciplineProgram
-            };
-        });
-    }
 
     async parse(req, res, next){
         pdfParse(pdfBuffer).then(data => {
@@ -138,8 +112,6 @@ class EventController{
     }
 
     async create(req, res, next){
-
-
             try {
 
                 const {name, startDate, endDate, userCount, gender, country, region, city} = req.body;
@@ -153,8 +125,6 @@ class EventController{
                         gender: gender
                 }}
                 )
-
-
 
                 // Создаём или получаем страну
                 Adres.push(await Country.findOrCreate({
@@ -202,69 +172,103 @@ class EventController{
     async createFromJson(req,res){
         fs.readFile('events.json', 'utf8', async (err, jsonData) => {
             if (err) {
-                console.error("Ошибка чтения файла:", err);
+                console.error('Ошибка чтения файла:', err);
                 return;
             }
+
             try {
-                // Парсим JSON-строку в объект
-                const data = JSON.parse(jsonData);
+                const data = JSON.parse(jsonData); // Парсим JSON в объект
 
-                // Преобразуем данные
-                const transformedData = this.transformData(data);
-                const data1 = transformedData.map(entry => entry.country);
-                const data2 = transformedData.map(entry => entry.region);
-                const data3 = transformedData.map(entry => entry.city);
+                for (const entry of data) {
+                    const {
+                        name,
+                        dates,
+                        location,
+                        participants,
+                        genderAge,
+                        disciplineProgram
+                    } = entry;
 
-                try{
+                    // Разделяем локацию на страну, регион и город
+                    const locationMatch = location.match(/^(РОССИЯ)([^,]+),\s*(.+)$/);
+                    const country = locationMatch ? locationMatch[1].trim() : null;
+                    const region = locationMatch ? locationMatch[2].trim() : null;
+                    const city = locationMatch ? locationMatch[3].trim() : null;
 
-                    for (const country of data1) {
-                        try {
-                            // Создаём запись или пропускаем, если уже существует
-                            await Country.findOrCreate({
-                                where: { country }, // Проверяем уникальность по полю gender
-                            });
-                        } catch (err) {
-                            console.error("Ошибка вставки данных:", err);
-                        }
+                    // Логируем разделенные значения
+                    console.log(`Распарсенная локация - страна: ${country}, регион: ${region}, город: ${city}`);
 
+                    // Если страна не найдена, выводим ошибку и продолжаем
+                    if (!country || !region || !city) {
+                        console.error('Ошибка: неверный формат локации. Пропущено одно или несколько значений.');
+                        continue; // Пропускаем данный ивент, если локация некорректна
                     }
 
-                    for (const region of data2) {
-                        try {
-                            // Создаём запись или пропускаем, если уже существует
-                            await Region.findOrCreate({
-                                where: { region }, // Проверяем уникальность по полю gender
-                            });
-                        } catch (err) {
-                            console.error("Ошибка вставки данных:", err);
-                        }
+                    // Проверка длины строки города, если она больше 255 символов, обрезаем
+                    const cityName = city.length > 255 ? city.substring(0, 255) : city;
 
+                    // Разделяем genderAge на пол и возраст
+                    const genderMatch = genderAge.match(/^(.*) от (\d+.*)$/);
+                    const gender = genderMatch ? genderMatch[1].split(",").map(g => g.trim()) : [];
+                    const age = genderMatch ? genderMatch[2].trim() : null;
+
+                    // Логируем информацию о поле
+                    console.log(`Пол участников: ${gender.join(', ')}, Возраст: ${age}`);
+
+                    // Проверяем и обрабатываем дату
+                    const startDate = moment(dates, 'DD.MM.YYYY', true);
+                    if (!startDate.isValid()) {
+                        console.error(`Ошибка: Некорректная дата "${dates}" для события "${name}"`);
+                        continue; // Пропускаем данный ивент, если дата некорректна
                     }
 
-                    for (const city of data3) {
-                        try {
-                            // Создаём запись или пропускаем, если уже существует
-                            await City.findOrCreate({
-                                where: { city }, // Проверяем уникальность по полю gender
-                            });
-                        } catch (err) {
-                            console.error("Ошибка вставки данных:", err);
+                    // Находим или создаем записи для Gender, Country, Region и City
+                    for (const g of gender) {
+                        // Проверяем, что поле gender не пустое
+                        if (!g) {
+                            console.error('Ошибка: пустое значение для gender.');
+                            continue;
                         }
 
+                        const [gotGender] = await Gender.findOrCreate({
+                            where: { gender: g },
+                        });
+
+                        const [gotCountry] = await Country.findOrCreate({
+                            where: { country },
+                        });
+
+                        const [gotRegion] = await Region.findOrCreate({
+                            where: { region },
+                        });
+
+                        const [gotCity] = await City.findOrCreate({
+                            where: { city: cityName },
+                        });
+
+                        // Проверяем, что полученные объекты не пустые
+                        if (!gotGender || !gotCountry || !gotRegion || !gotCity) {
+                            console.error('Ошибка: не удалось создать необходимые записи в базе данных.');
+                            continue;
+                        }
+
+                        // Создаем запись в таблице Event
+                        const eventRecord = await Event.create({
+                            name: name || '-',
+                            startDate: startDate.toDate(),
+                            endDate: null, // Поставьте дату окончания, если нужно
+                            userCount: parseInt(participants, 10) || 0,
+                            idGender: gotGender.idGender,
+                            idAddress: gotCity.idCity, // Используем idCity для Address
+                        });
+
+                        console.log(`Ивент "${name}" успешно записан в базу данных!`);
                     }
-
-
-                    console.log("Данные успешно записаны в базу данных!");
-                } catch (err) {
-                    console.error("Ошибка работы с базой данных:", err);
                 }
-
-                res.json(data1, data2, data3);
-
-            } catch (parseErr) {
-                console.error("Ошибка парсинга JSON:", parseErr);
+            } catch (error) {
+                console.error('Ошибка при обработке данных:', error);
             }
-        })
+        });
     }
 
     async deleteEvent(req){
