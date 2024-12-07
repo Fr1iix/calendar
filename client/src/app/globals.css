@@ -29,15 +29,15 @@ body {
   flex-direction: column; /* Вертикальное выравнивание */
   min-height: 100vh; /* Минимальная высота 100% от высоты экрана */
   margin: 0; /* Убираем отступы */
-  background-image: url('/background.png');
-  background-attachment: fixed;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  background-image: url('/background.png'); /* Добавляем фон */
+  background-attachment: fixed; /* Фон фиксирован */
+  background-size: cover; /* Масштабируем, чтобы покрыть весь экран */
+  background-position: center; /* Центрируем изображение */
+  background-repeat: no-repeat; /* Фон не повторяется */
 }
-
 main {
   flex: 1; /* Позволяет основному контенту занимать оставшееся пространство */
+  background-image: url('/background.png');
 }
 
 footer {
@@ -46,4 +46,5 @@ footer {
   background-color: #f1f1f1; /* Цвет фона футера */
   width: 100%; /* Ширина футера 100% */
   margin-top: auto;
+
 }
