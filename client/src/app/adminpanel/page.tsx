@@ -7,6 +7,7 @@ import { Card, CardContent, Typography, Grid } from "@mui/material";
 import Neeews from "./neeews";
 import UsersTable from "./UsersTable";
 import Zayav from "./zayav";
+import Sorevi from "./sorevi"
 
 const AdminPage: React.FC = () => {
     const [activeTab, setActiveTab] = useState<string>("statistics");
@@ -81,8 +82,8 @@ const AdminPage: React.FC = () => {
                             <Dashboard className={styles.iconBlue} /> Мероприятия
                         </li>
                         <li
-                            className={`${styles.navItem} ${activeTab === "applications" ? styles.active : ""}`}
-                            onClick={() => handleTabChange("applications")}
+                            className={`${styles.navItem} ${activeTab === "Sorevi" ? styles.active : ""}`}
+                            onClick={() => handleTabChange("Sorevi")}
                         >
                             <Assignment className={styles.iconOrange} /> Заявки соревнований
                         </li>
@@ -210,6 +211,8 @@ const AdminPage: React.FC = () => {
                 {activeTab === "users" && <UsersTable />}
                 {activeTab === "news" && <Neeews />}
                 {activeTab === "Zayav" && <Zayav />}
+                {activeTab === "Sorevi" && <Sorevi />}
+
             </main>
         </div>
     );
