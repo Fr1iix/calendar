@@ -1,118 +1,118 @@
-const ApiError = require('../error/ApiError');
-const bcrypt = require('bcrypt')
-const jwt = require('jsonwebtoken')
-const {User, UserInfo, Role} = require('../models/models')
-const mailService = require('../services/mailService');
-const generateJwt = (id, email, role) => {
-    return jwt.sign(
-        {id, email, role},
-        process.env.SECRET_KEY,
-        {expiresIn: '24h'}
-    )
-}
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const { User, Role } = require('../models/models');
+const sendEmail = require('../utils/sendEmail');
+const { Op } = require('sequelize');
+const crypto = require('crypto');
 
-class UserController {
-    async registration(req, res, next) {
-        try {
-            const {email, password, phone = '', role = 'user'} = req.body;
-            if (!email || !password) {
-                return next(ApiError.badRequest('Некорректный email или password'))
-            }
+// Функция для хэширования пароля
+const hashPassword = async (password) => {
+    return await bcrypt.hash(password, 10);
+};
 
-            // Проверка существования пользователя
-            const candidate = await User.findOne({where: {email}});
-            if (candidate) {
-                return next(ApiError.badRequest('Пользователь с таким email уже существует'));
-            }
+// Функция для регистрации пользователя
+exports.register = async (req, res) => {
+    const { email, phone, password } = req.body;
 
-            // Хеширование пароля
-            const hashPassword = await bcrypt.hash(password, 5);
-            const activationCode = Math.random().toString(36).substr(2, 6).toUpperCase();
-            const user = await User.create({email, password: hashPassword, phone, role});
-            await UserInfo.create({userId: user.id})
-            const token = generateJwt(user.id, user.email, user.role);
-            await mailService.sendActivationCode(email, activationCode);
-            res.json({ message: 'На почту отправлен код активации' });
-            return res.json({token});
-        } catch (e) {
-            next(ApiError.badRequest(e.message));
-        }
-    }
+    try {
+        // Проверка на существующего пользователя
+        const existingUser = await User.findOne({
+            where: { [Op.or]: [{ email }, { phone }] },
+        });
 
-        async activateAccount(req, res, next){
-            try {
-                const {email, activationCode} = req.body;
-                const user = await User.findOne({where: {email, activationCode}});
-
-                if (!user) return next(ApiError.badRequest('Неверный код активации'));
-
-                user.isActivated = true;
-                user.activationCode = null;
-                await user.save();
-
-                res.json({message: 'Аккаунт активирован'});
-            } catch (e) {
-                next(ApiError.badRequest(e.message));
-            }
+        if (existingUser) {
+            return res.status(400).json({ message: 'Пользователь уже существует' });
         }
 
+        // Хэширование пароля
+        const hashedPassword = await hashPassword(password);
 
-    async login(req, res, next) {
-        try {
-            const {email, password} = req.body;
-            const user = await User.findOne({where: {email}});
+        // Создание нового пользователя
+        const user = await User.create({
+            email,
+            phone,
+            password: hashedPassword,
+        });
 
-            if (!user) {
-                return next(ApiError.internal('Пользователь не найден'));
-            }
+        // Генерация кода для подтверждения почты
+        const verificationCode = crypto.randomBytes(20).toString('hex');
+        user.verificationCode = verificationCode;
+        await user.save();
 
-            let comparePassword = bcrypt.compareSync(password, user.password);
-            if (!comparePassword) {
-                return next(ApiError.internal('Указан неверный пароль'));
-            }
+        // Отправка письма с кодом подтверждения через OAuth
+        const emailSent = await sendEmail(user.email, 'Подтверждение почты', verificationCode);
 
-            const token = generateJwt(user.id, user.email, user.role);
-
-            return res.json({
-                token,
-                user: {
-                    id: user.id,
-                    email: user.email,
-                    firstName: user.firstName,
-                    lastName: user.lastName,
-                    role: user.role
-                }
+        if (emailSent) {
+            return res.status(200).json({
+                message: 'Пожалуйста, проверьте свою почту для подтверждения аккаунта.',
             });
-        } catch (e) {
-            next(ApiError.badRequest(e.message));
         }
+
+        res.status(500).json({ message: 'Ошибка при отправке письма с подтверждением.' });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Ошибка на сервере' });
     }
+};
 
-    async check(req, res) {
-        const token = generateJwt(req.user.id, req.user.email, req.user.role)
+// Функция для подтверждения почты
+exports.verifyEmail = async (req, res) => {
+    const { email, verificationCode } = req.body;
 
-        return res.json({token})
-    }
+    try {
+        const user = await User.findOne({ where: { email, verificationCode } });
 
-    async adminPanel(req, res, next) {
-        try {
-            const users = await User.findAll({ include: Role });
-            res.json(users);
-        } catch (e) {
-            next(ApiError.badRequest(e.message));
+        if (!user) {
+            return res.status(400).json({ message: 'Неверный код подтверждения или пользователь не найден.' });
         }
+
+        // Подтверждаем email
+        user.isEmailVerified = true;
+        user.verificationCode = null;
+        await user.save();
+
+        res.status(200).json({ message: 'Почта успешно подтверждена!' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Ошибка на сервере' });
     }
+};
 
-    async getAllUserEmails(req, res, next) {
-        try {
-            const users = await User.findAll({attributes: ['email']}); // Получаем только email
+// Функция для логина пользователя
+exports.login = async (req, res) => {
+    const { email, password } = req.body;
 
-            const emails = users.map(user => user.email); // Преобразуем результат в массив email-ов
-            return res.json(emails); // Возвращаем массив email-ов
-        } catch (error) {
-            next(ApiError.badRequest(error.message));
+    try {
+        // Ищем пользователя по email
+        const user = await User.findOne({ where: { email } });
+
+        if (!user) {
+            return res.status(400).json({ message: 'Пользователь с таким email не найден' });
         }
-    }
-}
 
-module.exports = new UserController()
+        // Проверяем пароль
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (!isPasswordValid) {
+            return res.status(400).json({ message: 'Неверный пароль' });
+        }
+
+        // Проверяем, подтверждена ли почта
+        if (!user.isEmailVerified) {
+            return res.status(400).json({ message: 'Пожалуйста, подтвердите свою почту.' });
+        }
+
+        // Генерация JWT токена
+        const token = jwt.sign(
+            { id: user.id, email: user.email, phone: user.phone },
+            process.env.JWT_SECRET,
+            { expiresIn: '1h' } // Токен истекает через 1 час
+        );
+
+        // Отправляем токен в ответе
+        res.status(200).json({ message: 'Авторизация успешна', token });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Ошибка на сервере' });
+    }
+};

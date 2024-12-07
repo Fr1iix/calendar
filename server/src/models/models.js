@@ -8,7 +8,9 @@ const User = sequelize.define('User', {
     phone: { type: DataTypes.STRING },
     password: { type: DataTypes.STRING, allowNull: false },
     activated: { type: DataTypes.BOOLEAN, defaultValue: false },
-    dateRegister: { type: DataTypes.DATE},
+    dateRegister: { type: DataTypes.DATE },
+    isEmailVerified: { type: DataTypes.BOOLEAN, defaultValue: false, },
+    verificationCode: { type: DataTypes.STRING, allowNull: true, },
 
 }, { tableName: 'User', timestamps: false });
 
