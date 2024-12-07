@@ -15,7 +15,7 @@ const User = sequelize.define('User', {
 }, { tableName: 'User', timestamps: false });
 
 const UserInfo = sequelize.define('UserInfo', {
-    idUserInfo: { type: DataTypes.INTEGER, primaryKey: true },
+    idUserInfo: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true  },
     firstName: { type: DataTypes.STRING },
     lastName: { type: DataTypes.STRING },
     middleName: { type: DataTypes.STRING },

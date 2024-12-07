@@ -1,22 +1,22 @@
 const nodemailer = require('nodemailer');
 
-// Создаем транспортер для подключения к SMTP-серверу Яндекса
 const transporter = nodemailer.createTransport({
-    service: 'yahoo', // Для Яндекса используем 'yahoo' в качестве сервиса
+    host: 'smtp.yandex.ru',
+    port: 587,
+    secure: true,
     auth: {
-        user: process.env.YANDEX_EMAIL,  // Ваш email на Яндекс
-        pass: process.env.YANDEX_PASSWORD,  // Ваш пароль от почты Яндекс
+        user: process.env.YANDEX_EMAIL,
+        pass: process.env.YANDEX_PASSWORD,
     },
 });
 
-// Функция для отправки email
 const sendEmail = async (to, subject, text) => {
     try {
         const info = await transporter.sendMail({
-            from: process.env.YANDEX_EMAIL, // Адрес отправителя
-            to: to, // Адрес получателя
-            subject: subject, // Тема письма
-            text: text, // Текст письма
+            from: process.env.YANDEX_EMAIL,
+            to: to,
+            subject: subject,
+            text: text,
         });
 
         console.log('Письмо отправлено: ', info.response);

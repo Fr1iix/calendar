@@ -6,11 +6,8 @@ const userController = require('../controller/UserController');
 const authMiddleware = require('../middleware/authmiddleware');
 const AddressRouter = require('./AddressRouter');
 const GenderRouter = require('./GenderRouter');
-const NewsRouter = require('/NewsRouter')
+const NewsRouter = require('./NewsRouter')
 
-// Роуты для регистрации и авторизации
-router.post('/registration', userController.register); // Регистрация
-router.post('/login', userController.login); // Логин
 
 // Пример маршрута для страницы добавления новостей, доступной только администратору
 router.get('/news/add-news', authMiddleware('admin'), (req, res) => {
