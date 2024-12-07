@@ -6,5 +6,6 @@ router.post('/create', AddressController.create)
 router.delete('/delete/:id', AddressController.deleteAddress)
 router.get("/getAll", AddressController.getAllAddresses)
 router.get("/getOne/:id", AddressController.getOneAddress)
+router.post('/createFromJson', AddressController.createFromJson)
 
 module.exports = router;
