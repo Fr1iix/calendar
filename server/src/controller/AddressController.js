@@ -90,7 +90,7 @@ class AddressController {
                             ? await City.findOrCreate({ where: { city } })
                             : [null];
 
-                        const [gotAddress] = await Address.findOrCreate({
+                       await Address.findOrCreate({
                             where: {
                                 idCountry: gotCountry?.idCountry || null,
                                 idRegion: gotRegion?.idRegion || null,
