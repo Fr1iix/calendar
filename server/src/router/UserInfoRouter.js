@@ -1,10 +1,8 @@
-const Router = require('express')
-const router = new Router()
-const UserInfoController = require('../controller/UserInfoController')
+const express = require('express');
+const { getUserInfo } = require('../controller/UserInfoController');
+const router = express.Router();
 
+// Получение информации о пользователе
+router.get('/info/:userId', getUserInfo);
 
-router.post("/create", UserInfoController.create)
-router.put("/update/:id", UserInfoController.updateOne)
-router.get("/getOne/:id", UserInfoController.getOneUserInfo)
-
-module.exports = router
+module.exports = router;
