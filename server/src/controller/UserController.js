@@ -30,7 +30,7 @@ exports.register = async (req, res) => {
 
         // Создание записи в UserInfo
         await UserInfo.create({
-            idUser: user.idUser,
+            idUserInfo: user.idUser,
             firstName,
             lastName,
             middleName,
