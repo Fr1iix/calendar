@@ -5,6 +5,8 @@ const userinfoRouter = require('./userinfoRouter');
 const eventRouter = require('./eventRouter');
 const userController = require('../controller/UserController');
 const authMiddleware = require('../middleware/authmiddleware');
+const AddressRouter = require('./AddressRouter');
+const GenderRouter = require('./GenderRouter');
 
 // Роуты для регистрации и авторизации
 router.post('/registration', userController.register); // Регистрация
@@ -19,5 +21,7 @@ router.get('/news/add-news', authMiddleware('admin'), (req, res) => {
 router.use('/user', userRouter); // Роуты для пользователей
 router.use('/userinfo', userinfoRouter); // Роуты для информации о пользователе
 router.use('/event', eventRouter); // Роуты для событий
+router.use('/address', AddressRouter)
+router.use('/gender', GenderRouter)
 
 module.exports = router;

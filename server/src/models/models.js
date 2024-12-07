@@ -98,17 +98,17 @@ const Address = sequelize.define('Address', {
 
 const City = sequelize.define('City', {
     idCity: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    name: { type: DataTypes.STRING, allowNull: false },
+    city: { type: DataTypes.STRING, allowNull: false },
 }, { tableName: 'City', timestamps: false });
 
 const Region = sequelize.define('Region', {
     idRegion: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    name: { type: DataTypes.STRING, allowNull: false },
+    region: { type: DataTypes.STRING, allowNull: false },
 }, { tableName: 'Region', timestamps: false });
 
 const Country = sequelize.define('Country', {
     idCountry: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
-    name: { type: DataTypes.STRING, allowNull: false },
+    country: { type: DataTypes.STRING, allowNull: false },
 }, { tableName: 'Country', timestamps: false });
 
 const AnalyticsRegion = sequelize.define('AnalyticsRegion', {
